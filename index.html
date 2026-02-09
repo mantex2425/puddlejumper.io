@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PuddleJumper - Smarter Decisions for Rideshare Drivers</title>
+    <meta name="description" content="AI-powered decision engine that helps Uber and Lyft drivers earn more by analyzing every offer in real-time.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #ffffff;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* Header */
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+        
+        /* Hero */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            color: #1a1a1a;
+        }
+        
+        .hero h1 span {
+            color: #2563eb;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: background 0.2s;
+        }
+        
+        .cta-button:hover {
+            background: #1d4ed8;
+        }
+        
+        .hero-note {
+            margin-top: 16px;
+            font-size: 14px;
+            color: #999;
+        }
+        
+        /* Features */
+        .features {
+            padding: 80px 0;
+            background: #f8fafc;
+        }
+        
+        .features h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 60px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .feature {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+        
+        .feature h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .feature p {
+            color: #666;
+        }
+        
+        /* How it works */
+        .how-it-works {
+            padding: 80px 0;
+        }
+        
+        .how-it-works h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 60px;
+        }
+        
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .step {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            background: #2563eb;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .step-content h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .step-content p {
+            color: #666;
+        }
+        
+        /* Pricing */
+        .pricing {
+            padding: 80px 0;
+            background: #f8fafc;
+            text-align: center;
+        }
+        
+        .pricing h2 {
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+        
+        .pricing .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 18px;
+        }
+        
+        .price-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .price {
+            font-size: 48px;
+            font-weight: 700;
+            color: #2563eb;
+        }
+        
+        .price span {
+            font-size: 18px;
+            color: #666;
+            font-weight: 400;
+        }
+        
+        .price-card ul {
+            list-style: none;
+            margin: 32px 0;
+            text-align: left;
+        }
+        
+        .price-card li {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .price-card li:last-child {
+            border-bottom: none;
+        }
+        
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid #eee;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+        
+        .footer-links a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .footer-links a:hover {
+            color: #2563eb;
+        }
+        
+        .copyright {
+            color: #999;
+            font-size: 14px;
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .features h2,
+            .how-it-works h2,
+            .pricing h2 {
+                font-size: 28px;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="logo">🚗 PuddleJumper</a>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="/help.html">Help</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Stop guessing. <span>Start earning.</span></h1>
+                <p>PuddleJumper uses AI to analyze every Uber and Lyft offer in real-time, telling you exactly which rides are worth taking.</p>
+                <a href="https://play.google.com/store/apps/details?id=io.puddlejumper.app" class="cta-button">Download for Android</a>
+                <p class="hero-note">30-day free trial • No credit card required</p>
+            </div>
+        </section>
+        
+        <section class="features" id="features">
+            <div class="container">
+                <h2>Why drivers love PuddleJumper</h2>
+                <div class="feature-grid">
+                    <div class="feature">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Instant Analysis</h3>
+                        <p>Get accept/decline recommendations within Uber's 10-second offer window. No fumbling with calculators.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Smart Zones</h3>
+                        <p>Mark your green zones (where you want to be) and red zones (where you don't). PuddleJumper factors in deadhead miles.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">📊</div>
+                        <h3>Real Hourly Rate</h3>
+                        <p>See your true $/hour including pickup time and return distance — not just what Uber shows you.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🗣️</div>
+                        <h3>Voice Assistant</h3>
+                        <p>Puddles speaks your decision out loud so you can keep your eyes on the road.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">📈</div>
+                        <h3>Learn Your Market</h3>
+                        <p>Track which areas and times are most profitable. Data-driven decisions beat gut feelings.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">💰</div>
+                        <h3>Pays for Itself</h3>
+                        <p>Drivers report 20-40% higher hourly earnings. That's $100+ extra per week.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="how-it-works" id="how-it-works">
+            <div class="container">
+                <h2>How it works</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Set up your markets</h3>
+                            <p>Define your home base, green zones where you want rides to end, and red zones to avoid. Set your minimum hourly rate and $/mile thresholds.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Drive like normal</h3>
+                            <p>When an offer comes in, tap Puddles to take a screenshot. Our AI reads the offer details instantly.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Get your answer</h3>
+                            <p>Within seconds, Puddles tells you: Accept (green), Decline (red), or Maybe (yellow) — with the math to back it up.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Earn more, stress less</h3>
+                            <p>No more mental math. No more accepting bad rides. Just clear, data-driven decisions every time.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="pricing" id="pricing">
+            <div class="container">
+                <h2>Simple pricing</h2>
+                <p class="subtitle">One plan. Everything included. Cancel anytime.</p>
+                <div class="price-card">
+                    <div class="price">$19.99 <span>/month</span></div>
+                    <ul>
+                        <li><span class="check">✓</span> Unlimited offer analysis</li>
+                        <li><span class="check">✓</span> Voice assistant (Puddles)</li>
+                        <li><span class="check">✓</span> Multiple markets</li>
+                        <li><span class="check">✓</span> Green & red zone mapping</li>
+                        <li><span class="check">✓</span> Earnings analytics</li>
+                        <li><span class="check">✓</span> 30-day free trial</li>
+                    </ul>
+                    <a href="https://play.google.com/store/apps/details?id=io.puddlejumper.app" class="cta-button">Start Free Trial</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="/privacy.html">Privacy Policy</a></li>
+                    <li><a href="/terms.html">Terms of Service</a></li>
+                    <li><a href="/help.html">Help & Support</a></li>
+                    <li><a href="mailto:support@puddlejumper.io">Contact</a></li>
+                </ul>
+                <p class="copyright">© 2026 PuddleJumper. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
