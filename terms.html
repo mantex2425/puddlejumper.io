@@ -13,149 +13,169 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.7;
-            color: #1a1a1a;
-            background: #ffffff;
+            color: #E0E0E0;
+            background: #121212;
         }
-        
+
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 0 24px;
         }
-        
+
         header {
             padding: 20px 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #2D2D2D;
+            background: #1A1A1A;
         }
-        
+
         .logo {
             font-size: 24px;
             font-weight: 700;
-            color: #2563eb;
+            color: #00FF00;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        
+
+        .logo-img {
+            height: 36px;
+            width: auto;
+        }
+
         main {
             padding: 60px 0;
         }
-        
+
         h1 {
             font-size: 36px;
             margin-bottom: 8px;
+            color: #FFFFFF;
         }
-        
+
         .last-updated {
-            color: #666;
+            color: #757575;
             margin-bottom: 40px;
         }
-        
+
         h2 {
             font-size: 24px;
             margin-top: 40px;
             margin-bottom: 16px;
-            color: #1a1a1a;
+            color: #FFFFFF;
         }
-        
+
         p {
             margin-bottom: 16px;
-            color: #444;
+            color: #BDBDBD;
         }
-        
+
         ul {
             margin-bottom: 16px;
             padding-left: 24px;
         }
-        
+
         li {
             margin-bottom: 8px;
-            color: #444;
+            color: #BDBDBD;
         }
-        
+
+        strong {
+            color: #E0E0E0;
+        }
+
         a {
-            color: #2563eb;
+            color: #4CAF50;
         }
-        
+
+        a:hover {
+            color: #00FF00;
+        }
+
         footer {
             padding: 40px 0;
-            border-top: 1px solid #eee;
+            border-top: 1px solid #2D2D2D;
             margin-top: 60px;
+            background: #1A1A1A;
         }
-        
+
         .footer-links {
             display: flex;
             gap: 24px;
             list-style: none;
             justify-content: center;
         }
-        
+
         .footer-links a {
-            color: #666;
+            color: #757575;
             text-decoration: none;
             font-size: 14px;
+            transition: color 0.2s;
         }
-        
+
         .footer-links a:hover {
-            color: #2563eb;
+            color: #00FF00;
         }
     </style>
 </head>
 <body>
     <header>
         <div class="container">
-            <a href="/" class="logo">🚗 PuddleJumper</a>
+            <a href="/" class="logo"><img src="/Puddles_Transparent_bg.png" alt="PuddleJumper mascot" class="logo-img"> PuddleJumper</a>
         </div>
     </header>
-    
+
     <main>
         <div class="container">
             <h1>Terms of Service</h1>
             <p class="last-updated">Last updated: February 9, 2026</p>
-            
+
             <p>Welcome to PuddleJumper. By using our mobile application and services, you agree to these Terms of Service. Please read them carefully.</p>
-            
+
             <h2>1. Service Description</h2>
-            
+
             <p>PuddleJumper is a decision-support tool for rideshare drivers. We analyze ride offers from platforms like Uber and Lyft and provide recommendations on whether to accept or decline based on your preferences and market conditions.</p>
-            
+
             <p><strong>Important:</strong> PuddleJumper provides recommendations only. All decisions to accept or decline rides are ultimately yours. We do not guarantee any specific earnings outcomes.</p>
-            
+
             <h2>2. Eligibility</h2>
-            
+
             <p>To use PuddleJumper, you must:</p>
-            
+
             <ul>
                 <li>Be at least 18 years old</li>
                 <li>Be an active driver on a rideshare platform (Uber, Lyft, or similar)</li>
                 <li>Have a valid Google account for authentication</li>
                 <li>Agree to these Terms of Service and our Privacy Policy</li>
             </ul>
-            
+
             <h2>3. Account and Security</h2>
-            
+
             <p>You are responsible for maintaining the security of your account. Do not share your login credentials. Notify us immediately if you suspect unauthorized access to your account.</p>
-            
+
             <h2>4. Subscription and Payment</h2>
-            
+
             <p>PuddleJumper is a subscription service priced at $19.99 per month. Payment is processed through Google Play. Your subscription will automatically renew unless cancelled at least 24 hours before the end of the current billing period.</p>
-            
+
             <p>We offer a 30-day free trial for new users. You will not be charged during the trial period. If you do not cancel before the trial ends, your subscription will begin and you will be charged.</p>
-            
+
             <p>Refunds are handled according to Google Play's refund policies.</p>
-            
+
             <h2>5. Referral Program</h2>
-            
+
             <p>PuddleJumper offers a referral program. You may earn $15 for each new driver who signs up using your referral code, processes at least 100 ride offers, and completes their first paid subscription month.</p>
-            
+
             <p>Referral abuse, including creating fake accounts or self-referrals, will result in forfeiture of referral bonuses and possible account termination.</p>
-            
+
             <h2>6. Acceptable Use</h2>
-            
+
             <p>You agree not to:</p>
-            
+
             <ul>
                 <li>Use the service for any illegal purpose</li>
                 <li>Attempt to reverse-engineer, decompile, or hack the application</li>
@@ -164,57 +184,57 @@
                 <li>Interfere with or disrupt the service or servers</li>
                 <li>Misrepresent your identity or affiliation</li>
             </ul>
-            
+
             <h2>7. Relationship with Rideshare Platforms</h2>
-            
+
             <p>PuddleJumper is an independent service and is not affiliated with, endorsed by, or sponsored by Uber, Lyft, or any other rideshare platform. Use of PuddleJumper is at your own discretion and risk.</p>
-            
+
             <p>You are responsible for complying with the terms of service of any rideshare platform you drive for. We are not responsible if your use of our service affects your standing with any rideshare platform.</p>
-            
+
             <h2>8. Disclaimer of Warranties</h2>
-            
+
             <p>PuddleJumper is provided "as is" without warranties of any kind, express or implied. We do not guarantee:</p>
-            
+
             <ul>
                 <li>That the service will be uninterrupted or error-free</li>
                 <li>The accuracy of ride offer analysis or recommendations</li>
                 <li>Any specific earnings or financial outcomes</li>
                 <li>Compatibility with all devices or rideshare platforms</li>
             </ul>
-            
+
             <h2>9. Limitation of Liability</h2>
-            
+
             <p>To the maximum extent permitted by law, PuddleJumper and its operator shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including lost profits, lost earnings, or lost data, arising from your use of the service.</p>
-            
+
             <p>Our total liability for any claims arising from your use of the service shall not exceed the amount you paid us in the 12 months preceding the claim.</p>
-            
+
             <h2>10. Indemnification</h2>
-            
+
             <p>You agree to indemnify and hold harmless PuddleJumper, its operator, and affiliates from any claims, damages, or expenses arising from your use of the service or violation of these terms.</p>
-            
+
             <h2>11. Changes to Terms</h2>
-            
+
             <p>We may update these Terms of Service from time to time. We will notify you of significant changes through the app or via email. Continued use after changes constitutes acceptance of the new terms.</p>
-            
+
             <h2>12. Termination</h2>
-            
+
             <p>We may terminate or suspend your account at any time for violation of these terms or for any other reason at our discretion. You may cancel your subscription at any time through Google Play.</p>
-            
+
             <h2>13. Governing Law</h2>
-            
+
             <p>These Terms shall be governed by the laws of the State of Texas, without regard to conflict of law principles. Any disputes shall be resolved in the courts of Harris County, Texas.</p>
-            
+
             <h2>14. Contact</h2>
-            
+
             <p>For questions about these Terms of Service, please contact us:</p>
-            
+
             <p>
                 Email: <a href="mailto:support@puddlejumper.io">support@puddlejumper.io</a><br>
                 Website: <a href="https://puddlejumper.io">puddlejumper.io</a>
             </p>
         </div>
     </main>
-    
+
     <footer>
         <div class="container">
             <ul class="footer-links">

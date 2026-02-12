@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PuddleJumper - Smarter Decisions for Rideshare Drivers</title>
-    <meta name="description" content="AI-powered decision engine that helps Uber and Lyft drivers earn more by analyzing every offer in real-time.">
+    <meta name="description" content="AI-powered decision engine that helps Uber drivers earn more by analyzing every offer in real-time.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,153 +14,175 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
-            color: #1a1a1a;
-            background: #ffffff;
+            color: #E0E0E0;
+            background: #121212;
         }
-        
+
         .container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 0 24px;
         }
-        
+
         /* Header */
         header {
             padding: 20px 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #2D2D2D;
+            background: #1A1A1A;
         }
-        
+
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .logo {
             font-size: 24px;
             font-weight: 700;
-            color: #2563eb;
+            color: #00FF00;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        
+
+        .logo-img {
+            height: 36px;
+            width: auto;
+        }
+
         .nav-links {
             display: flex;
             gap: 32px;
             list-style: none;
         }
-        
+
         .nav-links a {
-            color: #666;
+            color: #BDBDBD;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.2s;
         }
-        
+
         .nav-links a:hover {
-            color: #2563eb;
+            color: #00FF00;
         }
-        
+
         /* Hero */
         .hero {
             padding: 80px 0;
             text-align: center;
+            background: #121212;
         }
-        
+
         .hero h1 {
             font-size: 48px;
             font-weight: 700;
             line-height: 1.2;
             margin-bottom: 24px;
-            color: #1a1a1a;
+            color: #FFFFFF;
         }
-        
+
         .hero h1 span {
-            color: #2563eb;
+            color: #00FF00;
         }
-        
+
         .hero p {
             font-size: 20px;
-            color: #666;
+            color: #BDBDBD;
             max-width: 600px;
             margin: 0 auto 40px;
         }
-        
+
         .cta-button {
             display: inline-block;
-            background: #2563eb;
-            color: white;
+            background: #00FF00;
+            color: #000000;
             padding: 16px 32px;
             border-radius: 8px;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 18px;
-            transition: background 0.2s;
+            transition: background 0.2s, box-shadow 0.2s;
         }
-        
+
         .cta-button:hover {
-            background: #1d4ed8;
+            background: #4CAF50;
+            color: #FFFFFF;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
         }
-        
+
         .hero-note {
             margin-top: 16px;
             font-size: 14px;
-            color: #999;
+            color: #757575;
         }
-        
+
         /* Features */
         .features {
             padding: 80px 0;
-            background: #f8fafc;
+            background: #1A1A1A;
         }
-        
+
         .features h2 {
             text-align: center;
             font-size: 36px;
             margin-bottom: 60px;
+            color: #FFFFFF;
         }
-        
+
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 40px;
         }
-        
+
         .feature {
-            background: white;
+            background: #1E1E1E;
             padding: 32px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid #2D2D2D;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        
+
+        .feature:hover {
+            border-color: #4CAF50;
+            box-shadow: 0 4px 20px rgba(0, 255, 0, 0.08);
+        }
+
         .feature-icon {
             font-size: 40px;
             margin-bottom: 16px;
         }
-        
+
         .feature h3 {
             font-size: 20px;
             margin-bottom: 12px;
+            color: #FFFFFF;
         }
-        
+
         .feature p {
-            color: #666;
+            color: #BDBDBD;
         }
-        
+
         /* How it works */
         .how-it-works {
             padding: 80px 0;
+            background: #121212;
         }
-        
+
         .how-it-works h2 {
             text-align: center;
             font-size: 36px;
             margin-bottom: 60px;
+            color: #FFFFFF;
         }
-        
+
         .steps {
             display: flex;
             flex-direction: column;
@@ -168,16 +190,16 @@
             max-width: 700px;
             margin: 0 auto;
         }
-        
+
         .step {
             display: flex;
             gap: 24px;
             align-items: flex-start;
         }
-        
+
         .step-number {
-            background: #2563eb;
-            color: white;
+            background: #4CAF50;
+            color: #000000;
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -187,84 +209,88 @@
             font-weight: 700;
             flex-shrink: 0;
         }
-        
+
         .step-content h3 {
             font-size: 20px;
             margin-bottom: 8px;
+            color: #FFFFFF;
         }
-        
+
         .step-content p {
-            color: #666;
+            color: #BDBDBD;
         }
-        
+
         /* Pricing */
         .pricing {
             padding: 80px 0;
-            background: #f8fafc;
+            background: #1A1A1A;
             text-align: center;
         }
-        
+
         .pricing h2 {
             font-size: 36px;
             margin-bottom: 16px;
+            color: #FFFFFF;
         }
-        
+
         .pricing .subtitle {
-            color: #666;
+            color: #BDBDBD;
             margin-bottom: 40px;
             font-size: 18px;
         }
-        
+
         .price-card {
-            background: white;
+            background: #1E1E1E;
             padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border: 1px solid #2D2D2D;
             max-width: 400px;
             margin: 0 auto;
         }
-        
+
         .price {
             font-size: 48px;
             font-weight: 700;
-            color: #2563eb;
+            color: #00FF00;
         }
-        
+
         .price span {
             font-size: 18px;
-            color: #666;
+            color: #757575;
             font-weight: 400;
         }
-        
+
         .price-card ul {
             list-style: none;
             margin: 32px 0;
             text-align: left;
         }
-        
+
         .price-card li {
             padding: 12px 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #2D2D2D;
             display: flex;
             align-items: center;
             gap: 12px;
+            color: #E0E0E0;
         }
-        
+
         .price-card li:last-child {
             border-bottom: none;
         }
-        
+
         .check {
-            color: #22c55e;
+            color: #00FF00;
             font-weight: bold;
         }
-        
+
         /* Footer */
         footer {
             padding: 40px 0;
-            border-top: 1px solid #eee;
+            border-top: 1px solid #2D2D2D;
+            background: #1A1A1A;
         }
-        
+
         .footer-content {
             display: flex;
             justify-content: space-between;
@@ -272,48 +298,49 @@
             flex-wrap: wrap;
             gap: 24px;
         }
-        
+
         .footer-links {
             display: flex;
             gap: 24px;
             list-style: none;
         }
-        
+
         .footer-links a {
-            color: #666;
+            color: #757575;
             text-decoration: none;
             font-size: 14px;
+            transition: color 0.2s;
         }
-        
+
         .footer-links a:hover {
-            color: #2563eb;
+            color: #00FF00;
         }
-        
+
         .copyright {
-            color: #999;
+            color: #616161;
             font-size: 14px;
         }
-        
+
         /* Mobile */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
             }
-            
+
             .hero h1 {
                 font-size: 32px;
             }
-            
+
             .hero p {
                 font-size: 18px;
             }
-            
+
             .features h2,
             .how-it-works h2,
             .pricing h2 {
                 font-size: 28px;
             }
-            
+
             .footer-content {
                 flex-direction: column;
                 text-align: center;
@@ -325,12 +352,13 @@
     <header>
         <div class="container">
             <nav>
-                <a href="/" class="logo">🚗 PuddleJumper</a>
+                <a href="/" class="logo"><img src="/Puddles_Transparent_bg.png" alt="PuddleJumper mascot" class="logo-img"> PuddleJumper</a>
                 <ul class="nav-links">
                     <li><a href="#features">Features</a></li>
                     <li><a href="#how-it-works">How It Works</a></li>
                     <li><a href="#pricing">Pricing</a></li>
                     <li><a href="/help.html">Help</a></li>
+                    <li><a href="https://www.youtube.com/channel/UCv-QArIg_IV-wuimry32kVA" target="_blank">Videos</a></li>
                 </ul>
             </nav>
         </div>
@@ -340,7 +368,7 @@
         <section class="hero">
             <div class="container">
                 <h1>Stop guessing. <span>Start earning.</span></h1>
-                <p>PuddleJumper uses AI to analyze every Uber and Lyft offer in real-time, telling you exactly which rides are worth taking.</p>
+                <p>PuddleJumper uses AI to analyze every Uber offer in real-time, telling you exactly which rides are worth taking.</p>
                 <a href="https://play.google.com/store/apps/details?id=io.puddlejumper.app" class="cta-button">Download for Android</a>
                 <p class="hero-note">30-day free trial • No credit card required</p>
             </div>
@@ -448,6 +476,7 @@
                     <li><a href="/terms.html">Terms of Service</a></li>
                     <li><a href="/help.html">Help & Support</a></li>
                     <li><a href="mailto:support@puddlejumper.io">Contact</a></li>
+                    <li><a href="https://www.youtube.com/channel/UCv-QArIg_IV-wuimry32kVA" target="_blank">YouTube</a></li>
                 </ul>
                 <p class="copyright">© 2026 PuddleJumper. All rights reserved.</p>
             </div>
