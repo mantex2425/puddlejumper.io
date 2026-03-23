@@ -333,7 +333,7 @@
         submitButton.textContent = 'Submitting...';
 
         try {
-            const response = await fetch('https://api.puddlejumper.io/api/v1/request-deletion', {
+            const response = await fetch('https://puddlejumper-api-152974241923.us-central1.run.app/api/v1/account/request-deletion', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: emailInput.value.trim() })
