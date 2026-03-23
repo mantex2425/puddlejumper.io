@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Account - PuddleJumper</title>
+    <meta name="description" content="Request deletion of your PuddleJumper account and all associated data.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #E0E0E0;
+            background: #121212;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid #2D2D2D;
+            background: #1A1A1A;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00FF00;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-img {
+            height: 36px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #BDBDBD;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #00FF00;
+        }
+
+        /* Page content */
+        .page-content {
+            padding: 80px 0;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .page-content h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 16px;
+        }
+
+        .page-content > p {
+            color: #BDBDBD;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #E0E0E0;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #2D2D2D;
+            background: #1E1E1E;
+            color: #E0E0E0;
+            font-family: inherit;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input[type="email"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-top: 4px;
+            accent-color: #00FF00;
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .checkbox-group label {
+            color: #BDBDBD;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .submit-button {
+            display: inline-block;
+            background: #D32F2F;
+            color: #FFFFFF;
+            padding: 14px 28px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 16px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s, opacity 0.2s;
+        }
+
+        .submit-button:hover:not(:disabled) {
+            background: #B71C1C;
+        }
+
+        .submit-button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            background: #2D1616;
+            border: 1px solid #D32F2F;
+            color: #EF9A9A;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .success-message {
+            background: #1E1E1E;
+            border: 1px solid #4CAF50;
+            padding: 32px;
+            border-radius: 12px;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message h2 {
+            color: #FFFFFF;
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .success-message p {
+            color: #BDBDBD;
+            font-size: 16px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid #2D2D2D;
+            background: #1A1A1A;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: #757575;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #00FF00;
+        }
+
+        .copyright {
+            color: #616161;
+            font-size: 14px;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .page-content h1 {
+                font-size: 28px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="logo"><img src="/Puddles_Transparent_bg.png" alt="PuddleJumper mascot" class="logo-img"> PuddleJumper</a>
+                <ul class="nav-links">
+                    <li><a href="/#features">Features</a></li>
+                    <li><a href="/#how-it-works">How It Works</a></li>
+                    <li><a href="/#pricing">Pricing</a></li>
+                    <li><a href="/help.html">Help</a></li>
+                    <li><a href="https://blog.puddlejumper.io" target="_blank">Newsletter</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="page-content">
+                <h1>Delete Your Account</h1>
+                <p>Enter the email address associated with your PuddleJumper account. Once submitted, we will permanently delete your account and all associated data.</p>
+
+                <div class="success-message" id="success-message">
+                    <h2>Request Received</h2>
+                    <p>Your deletion request has been received. We will process it within 30 days.</p>
+                </div>
+
+                <form id="delete-form">
+                    <div class="error-message" id="error-message"></div>
+
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" id="email" name="email" required placeholder="you@example.com">
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="confirm" name="confirm">
+                        <label for="confirm">I confirm I want my PuddleJumper account and all associated data deleted</label>
+                    </div>
+
+                    <button type="submit" class="submit-button" id="submit-button" disabled>Delete My Account</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="/privacy.html">Privacy Policy</a></li>
+                    <li><a href="/terms.html">Terms of Service</a></li>
+                    <li><a href="/help.html">Help & Support</a></li>
+                    <li><a href="mailto:support@puddlejumper.io">Contact</a></li>
+                </ul>
+                <p class="copyright">&copy; 2026 PuddleJumper. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    const form = document.getElementById('delete-form');
+    const emailInput = document.getElementById('email');
+    const confirmCheckbox = document.getElementById('confirm');
+    const submitButton = document.getElementById('submit-button');
+    const errorMessage = document.getElementById('error-message');
+    const successMessage = document.getElementById('success-message');
+
+    function updateButton() {
+        submitButton.disabled = !(emailInput.validity.valid && emailInput.value.trim() && confirmCheckbox.checked);
+    }
+
+    emailInput.addEventListener('input', updateButton);
+    confirmCheckbox.addEventListener('change', updateButton);
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        errorMessage.style.display = 'none';
+        submitButton.disabled = true;
+        submitButton.textContent = 'Submitting...';
+
+        try {
+            const response = await fetch('https://api.puddlejumper.io/api/v1/request-deletion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: emailInput.value.trim() })
+            });
+
+            if (!response.ok) {
+                const data = await response.json().catch(() => null);
+                throw new Error(data?.message || 'Something went wrong. Please try again or contact support@puddlejumper.io.');
+            }
+
+            form.style.display = 'none';
+            successMessage.style.display = 'block';
+        } catch (err) {
+            errorMessage.textContent = err.message;
+            errorMessage.style.display = 'block';
+            submitButton.disabled = false;
+            submitButton.textContent = 'Delete My Account';
+            updateButton();
+        }
+    });
+    </script>
+</body>
+</html>
