@@ -133,62 +133,68 @@
     <main>
         <div class="container">
             <h1>Privacy Policy</h1>
-            <p class="last-updated">Last updated: February 9, 2026</p>
+            <p class="last-updated">Last updated: August 27, 2026</p>
 
-            <p>PuddleJumper ("we," "our," or "us") is operated by Andrew Bruce. This Privacy Policy explains how we collect, use, and protect your information when you use our mobile application and services.</p>
+            <p>PuddleJumper ("we," "our," or "us") is operated by Andrew Bruce. PuddleJumper helps a rideshare driver decide whether a ride offer is worth taking, by reading the offer shown on their screen and scoring it against their own running costs. This policy explains exactly what we collect to do that, what we do not collect, and how to delete it.</p>
+
+            <h2>Reading Your Screen</h2>
+
+            <p>PuddleJumper uses Android's AccessibilityService to notice when a ride offer appears and to capture that screen so the offer can be read. This is the only reason the app uses that permission, and it is the most sensitive thing the app does, so we want to be exact about it:</p>
+
+            <ul>
+                <li>It reads <strong>ride offer screens only</strong>. It does not read banking apps, messages, browsers, or anything else.</li>
+                <li>It <strong>never types, taps, or acts on your behalf</strong>. It only reads, and shows you a result.</li>
+                <li><strong>Captured images never leave your phone.</strong> The offer card is read on the device itself. Our servers receive the numbers and text extracted from it, never the image.</li>
+                <li>Saving copies of offer screens is <strong>off by default</strong>. If you switch on "Save Offer Screenshots" in Settings, images are written to your own device storage, where they stay until you delete them. You can switch it back off at any time in the same place, and delete anything already saved.</li>
+            </ul>
 
             <h2>Information We Collect</h2>
 
             <p><strong>Account Information:</strong> When you sign in with Google, we receive your email address and display name. We use this to create and manage your account.</p>
 
-            <p><strong>Screenshots:</strong> When you use PuddleJumper to analyze ride offers, screenshots are sent to our servers for processing. Screenshots are processed in real-time and are not stored permanently. We extract offer details (pickup location, dropoff location, fare, distance, time estimates) to provide our analysis.</p>
+            <p><strong>Offer Details:</strong> When an offer is scored, we receive the information needed to score it and to explain the result later: the fare, trip distance and time, pickup distance and time, ride type, and the pickup and dropoff addresses shown on the offer card.</p>
 
-            <p><strong>Offer History:</strong> We store anonymized records of ride offers you've analyzed, including pickup/dropoff areas (not exact addresses), fare amounts, and the recommendation PuddleJumper provided. We do not track whether you actually accepted or declined the ride. This data helps us improve our recommendations.</p>
+            <p><strong>Location:</strong> Your device's location at the moment an offer arrives, used to work out how far the pickup is and which market you are in. <strong>We do not track your location when the app is not running</strong> &mdash; the app holds no background-location permission at all.</p>
 
-            <p><strong>Driver Settings:</strong> We store your preferences including market definitions, green zones, red zones, and earning thresholds. This data is necessary to provide personalized recommendations.</p>
+            <p><strong>Extracted Text:</strong> We keep the raw text our reader pulled from the offer card. When the reader misreads a number, this is what lets us find out why instead of guessing.</p>
 
-            <p><strong>Device Information:</strong> We collect basic device information (device model, operating system version, app version) for troubleshooting and improving app compatibility.</p>
+            <p><strong>Driver Settings:</strong> Your preferences, including market definitions, green zones, red zones, your cost per mile, and your earning thresholds. This is what makes the recommendations yours rather than generic.</p>
+
+            <p><strong>Decision History:</strong> A record of the offers you were shown and what PuddleJumper recommended. We do not know whether you actually accepted or declined a ride.</p>
+
+            <p><strong>Device Information:</strong> Basic device information (model, operating system version, app version) for troubleshooting. If the app crashes, a diagnostic log is uploaded on next launch, linked to your account.</p>
+
+            <h2>What We Share With Other Drivers</h2>
+
+            <p>PuddleJumper's market screens &mdash; the heatmap, time grid, timelapse, and market rate lookup &mdash; work because drivers' offer economics are pooled. That pool is anonymous by design:</p>
+
+            <ul>
+                <li>Pooled records carry <strong>no driver identifier of any kind</strong>.</li>
+                <li>Locations are stored as <strong>hexagonal grid cells roughly half a kilometre across</strong>, not as coordinates or addresses.</li>
+                <li>What is pooled is the economics of an offer &mdash; fare, distance, time, hour of day &mdash; not who received it, and not whether they took it.</li>
+            </ul>
+
+            <p>One honest caveat: while only a few drivers are contributing in a given area, the pooled figures for that area are necessarily made up of a small number of people's offers. They are not tied to any name or account, but they are thin. They become both more useful and more anonymous as more drivers contribute.</p>
 
             <h2>How We Use Your Information</h2>
 
-            <ul>
-                <li>To analyze ride offers and provide accept/decline recommendations</li>
-                <li>To remember your markets, zones, and preferences</li>
-                <li>To show you earnings analytics and patterns</li>
-                <li>To improve our AI models and recommendation accuracy</li>
-                <li>To provide customer support</li>
-                <li>To send important service updates (not marketing)</li>
-            </ul>
+            <p>To score offers against your own costs, to show you your own decision history, to build the shared market picture described above, and to diagnose faults. We do not sell your data. We do not share your personal data with advertisers, and there is no advertising in the app.</p>
 
             <h2>Third-Party Services</h2>
 
-            <p>We use the following third-party services to operate PuddleJumper:</p>
-
             <ul>
-                <li><strong>Firebase (Google):</strong> Authentication and user management</li>
-                <li><strong>Google Cloud:</strong> Backend processing and hosting</li>
-                <li><strong>Supabase (PostgreSQL):</strong> Database storage</li>
-                <li><strong>Mapbox:</strong> Map display and visualization</li>
-                <li><strong>Google Places:</strong> Address geocoding and location lookup</li>
-                <li><strong>ElevenLabs:</strong> Voice synthesis for audio responses</li>
+                <li><strong>Google Firebase</strong> &mdash; sign-in and authentication</li>
+                <li><strong>Google Cloud Platform</strong> &mdash; hosting for the service and its database</li>
+                <li><strong>Google Maps Platform</strong> and <strong>Mapbox</strong> &mdash; turning addresses into coordinates, and drawing maps</li>
             </ul>
-
-            <p>Each of these services has their own privacy policy governing their use of data.</p>
 
             <h2>Data Security</h2>
 
-            <p>We implement industry-standard security measures to protect your data:</p>
-
-            <ul>
-                <li>All data is transmitted over encrypted HTTPS connections</li>
-                <li>Database access is restricted and authenticated</li>
-                <li>Screenshots are processed and discarded, not stored</li>
-                <li>We do not sell your personal information to third parties</li>
-            </ul>
+            <p>Data is transmitted over encrypted connections and stored on Google Cloud Platform infrastructure. Access requires authentication, and each driver's settings and history are scoped to their own account.</p>
 
             <h2>Data Retention</h2>
 
-            <p>We retain your account information and settings for as long as your account is active. Offer history is retained to provide analytics features. If you delete your account, we will delete your personal data within 30 days, except where we are required to retain it for legal purposes.</p>
+            <p>Your settings and decision history are kept while your account exists. Anonymous pooled offer economics have no identifier attached and are retained as part of the shared market data.</p>
 
             <h2>Your Rights</h2>
 
@@ -201,11 +207,13 @@
                 <li>Export your data in a portable format</li>
             </ul>
 
-            <p>To exercise these rights, contact us at <a href="mailto:support@puddlejumper.io">support@puddlejumper.io</a>.</p>
+            <p>Personal data is deleted within 30 days of a request. Anonymous pooled records cannot be traced back to you and are not removed, because there is no identifier on them by which to find them.</p>
+
+            <p>To exercise these rights, use the <a href="/delete-account.html">account deletion page</a> or contact us at <a href="mailto:support@puddlejumper.io">support@puddlejumper.io</a>.</p>
 
             <h2>Children's Privacy</h2>
 
-            <p>PuddleJumper is not intended for users under 18 years of age. We do not knowingly collect information from children.</p>
+            <p>PuddleJumper is a tool for working rideshare drivers and is not intended for users under 18 years of age. We do not knowingly collect information from children.</p>
 
             <h2>Changes to This Policy</h2>
 
