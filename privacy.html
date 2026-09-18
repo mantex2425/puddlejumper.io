@@ -166,15 +166,16 @@
 
             <h2>What We Share With Other Drivers</h2>
 
-            <p>PuddleJumper's market screens &mdash; the heatmap, time grid, and market rate lookup &mdash; work because drivers' offer economics are pooled. That pool is anonymous by design:</p>
+            <p>PuddleJumper's market screens &mdash; the heatmap, time grid, and market rate lookup &mdash; work because drivers' offer economics are pooled. Here is exactly what that means, and what it does not.</p>
 
             <ul>
-                <li>Pooled records carry <strong>no driver identifier of any kind</strong>.</li>
-                <li>Locations are stored as <strong>hexagonal grid cells roughly half a kilometre across</strong>, not as coordinates or addresses.</li>
-                <li>What is pooled is the economics of an offer &mdash; fare, distance, time, hour of day &mdash; not who received it, and not whether they took it.</li>
+                <li><strong>No other driver ever sees anything tied to you.</strong> The pooled screens show aggregated figures &mdash; typical pay by area, by day and by hour &mdash; and nothing in them identifies a driver, a trip or an account.</li>
+                <li><strong>Locations are hexagonal grid cells roughly half a kilometre across</strong>, never coordinates and never addresses. The cell is all that is pooled, so a pooled offer cannot be traced to a doorstep.</li>
+                <li><strong>What is pooled is the economics of an offer</strong> &mdash; fare, distance, time, hour of day, ride type &mdash; not who received it, and not whether they took it.</li>
+                <li><strong>We keep an internal link between a pooled record and the account that logged it.</strong> No driver can see it and nothing in the app exposes it, but we can follow it. We keep it for two reasons: to investigate faults in the data, and so that deleting your account can also remove what you contributed. Because of that link, we do not describe the pool as anonymous.</li>
             </ul>
 
-            <p>One honest caveat: while only a few drivers are contributing in a given area, the pooled figures for that area are necessarily made up of a small number of people's offers. They are not tied to any name or account, but they are thin. They become both more useful and more anonymous as more drivers contribute.</p>
+            <p>One honest caveat: while only a few drivers are contributing in a given area, the pooled figures for that area are necessarily made up of a small number of people's offers. They are not shown with any name or account, but they are thin. They become both more useful and harder to attribute as more drivers contribute.</p>
 
             <h2>How We Use Your Information</h2>
 
@@ -194,7 +195,7 @@
 
             <h2>Data Retention</h2>
 
-            <p>Your settings and decision history are kept while your account exists. Anonymous pooled offer economics have no identifier attached and are retained as part of the shared market data.</p>
+            <p>Your settings and decision history are kept while your account exists. Pooled offer economics are retained as part of the shared market data: they carry no coordinates and no addresses, only the grid cell and the economics of the offer. While your account exists, we can follow the internal link described above from a pooled record back to it.</p>
 
             <h2>Your Rights</h2>
 
@@ -207,7 +208,9 @@
                 <li>Export your data in a portable format</li>
             </ul>
 
-            <p>Personal data is deleted within 30 days of a request. Anonymous pooled records cannot be traced back to you and are not removed, because there is no identifier on them by which to find them.</p>
+            <p>Deleting your account removes your settings and your sign-in, and strips the account identifier from your decision history, within 30 days of the request. The de-identified offer records &mdash; fares, distances, times and grid cells &mdash; are kept as part of the shared market data. Once the identifier is gone, the internal link is broken and those records can no longer be traced back to you, by us or by anyone else.</p>
+
+            <p>If you would rather your past offers were removed from the pooled market data as well, email <a href="mailto:support@puddlejumper.io">support@puddlejumper.io</a> before you delete your account, while the link still exists, and we will remove them first.</p>
 
             <p>To exercise these rights, use the <a href="/delete-account.html">account deletion page</a> or contact us at <a href="mailto:support@puddlejumper.io">support@puddlejumper.io</a>.</p>
 
