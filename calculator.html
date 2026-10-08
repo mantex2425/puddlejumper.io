@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What did that ride actually pay? - PuddleJumper</title>
+    <meta name="description" content="Fare is what Uber shows. Work out what is left after the miles and the time, including the drive to the pickup and the drive back.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #E0E0E0;
+            background: #121212;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header — same as the rest of the site */
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid #2D2D2D;
+            background: #1A1A1A;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00FF00;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-img {
+            height: 36px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #BDBDBD;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a[aria-current="page"] {
+            color: #00FF00;
+        }
+
+        /* Tool intro */
+        .tool-head {
+            padding: 56px 0 32px;
+            text-align: center;
+        }
+
+        .tool-head h1 {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #FFFFFF;
+            margin-bottom: 16px;
+        }
+
+        .tool-head p {
+            font-size: 19px;
+            color: #BDBDBD;
+            max-width: 620px;
+            margin: 0 auto;
+        }
+
+        /* Two-column tool */
+        .tool {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            padding-bottom: 64px;
+        }
+
+        @media (min-width: 900px) {
+            .tool {
+                grid-template-columns: 1.1fr 0.9fr;
+                gap: 48px;
+                align-items: start;
+            }
+            .results-col {
+                position: sticky;
+                top: 24px;
+            }
+        }
+
+        .panel {
+            background: #1A1A1A;
+            border: 1px solid #2D2D2D;
+            border-radius: 12px;
+            padding: 28px;
+        }
+
+        .panel h2 {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #9E9E9E;
+            margin-bottom: 24px;
+        }
+
+        /* Input rows */
+        .field {
+            margin-bottom: 26px;
+        }
+
+        .field:last-child {
+            margin-bottom: 0;
+        }
+
+        .field-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .field label {
+            font-size: 15px;
+            font-weight: 500;
+            color: #E0E0E0;
+        }
+
+        .field input[type="number"] {
+            width: 92px;
+            flex: 0 0 auto;
+            background: #121212;
+            border: 1px solid #3D3D3D;
+            border-radius: 6px;
+            color: #FFFFFF;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 7px 10px;
+            text-align: right;
+        }
+
+        .field input[type="number"]:focus-visible,
+        .field input[type="range"]:focus-visible,
+        .example-btn:focus-visible,
+        .cta-button:focus-visible,
+        .toggle input:focus-visible + .toggle-track {
+            outline: 2px solid #00FF00;
+            outline-offset: 2px;
+        }
+
+        .field input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #2D2D2D;
+            cursor: pointer;
+        }
+
+        .field input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #00FF00;
+            border: none;
+            cursor: pointer;
+        }
+
+        .field input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #00FF00;
+            border: none;
+            cursor: pointer;
+        }
+
+        .field-note {
+            font-size: 13px;
+            color: #8E8E8E;
+            margin-top: 8px;
+        }
+
+        /* Return-home toggle */
+        .toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            cursor: pointer;
+        }
+
+        .toggle input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-track {
+            flex: 0 0 auto;
+            width: 48px;
+            height: 26px;
+            border-radius: 13px;
+            background: #3D3D3D;
+            position: relative;
+            transition: background 0.2s;
+        }
+
+        .toggle-track::after {
+            content: "";
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #9E9E9E;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .toggle input:checked + .toggle-track {
+            background: rgba(0, 255, 0, 0.3);
+        }
+
+        .toggle input:checked + .toggle-track::after {
+            transform: translateX(22px);
+            background: #00FF00;
+        }
+
+        /* Results */
+        .headline {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #2D2D2D;
+            margin-bottom: 20px;
+        }
+
+        .headline-label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #9E9E9E;
+        }
+
+        .headline-figure {
+            font-size: 64px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin: 6px 0 2px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .headline-unit {
+            font-size: 15px;
+            color: #BDBDBD;
+        }
+
+        .verdict {
+            font-size: 17px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+            text-wrap: balance;
+        }
+
+        .is-bad    { color: #FF5252; }
+        .is-edge   { color: #FFC107; }
+        .is-good   { color: #00FF00; }
+
+        .rows {
+            list-style: none;
+        }
+
+        .rows li {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 16px;
+            padding: 10px 0;
+            border-bottom: 1px solid #242424;
+            font-size: 15px;
+        }
+
+        .rows li:last-child {
+            border-bottom: none;
+        }
+
+        .rows .k {
+            color: #BDBDBD;
+        }
+
+        .rows .v {
+            font-weight: 600;
+            color: #FFFFFF;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        .rows li.spent .v {
+            color: #BDBDBD;
+        }
+
+        /* Examples */
+        .examples {
+            margin-top: 28px;
+        }
+
+        .examples h2 {
+            margin-bottom: 14px;
+        }
+
+        .example-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .example-btn {
+            flex: 1 1 auto;
+            background: #121212;
+            border: 1px solid #3D3D3D;
+            border-radius: 8px;
+            color: #E0E0E0;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 11px 16px;
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .example-btn:hover {
+            border-color: #00FF00;
+            color: #00FF00;
+        }
+
+        /* Tool footer / CTA */
+        .tool-foot {
+            margin-top: 28px;
+            padding: 24px;
+            background: #1A1A1A;
+            border: 1px solid #2D2D2D;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .tool-foot p {
+            color: #BDBDBD;
+            margin-bottom: 18px;
+            text-wrap: balance;
+        }
+
+        .tool-foot a.inline {
+            color: #00FF00;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .tool-foot a.inline:hover {
+            text-decoration: underline;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #00FF00;
+            color: #000000;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 17px;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #4CAF50;
+            color: #FFFFFF;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        /* Footer — same as the rest of the site */
+        footer {
+            background: #1A1A1A;
+            border-top: 1px solid #2D2D2D;
+            padding: 40px 0;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: #BDBDBD;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .footer-links a:hover {
+            color: #00FF00;
+        }
+
+        .copyright {
+            color: #757575;
+            font-size: 14px;
+        }
+
+        /* The rest of the site hides the nav links below 768px and shows the logo
+           alone; matching that keeps the header identical and stops six items
+           forcing a horizontal scroll on a phone. The footer carries the links. */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .tool-head {
+                padding: 36px 0 24px;
+            }
+            .tool-head h1 {
+                font-size: 30px;
+            }
+            .tool-head p {
+                font-size: 17px;
+            }
+            .panel {
+                padding: 20px;
+            }
+            .headline-figure {
+                font-size: 52px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="logo"><img src="/Puddles_Transparent_bg.png" alt="PuddleJumper mascot" class="logo-img"> PuddleJumper</a>
+                <ul class="nav-links">
+                    <li><a href="/#features">Features</a></li>
+                    <li><a href="/#how-it-works">How It Works</a></li>
+                    <li><a href="/calculator.html" aria-current="page">Calculator</a></li>
+                    <li><a href="/#pricing">Pricing</a></li>
+                    <li><a href="/help.html">Help</a></li>
+                    <li><a href="https://blog.puddlejumper.io" target="_blank">Newsletter</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="tool-head">
+                <h1>What did that ride actually pay?</h1>
+                <p>Fare is what Uber shows. This is what is left after the miles and the time.</p>
+            </div>
+
+            <div class="tool">
+                <!-- ---------------- inputs ---------------- -->
+                <div>
+                    <div class="panel">
+                        <h2>The offer</h2>
+
+                        <div class="field">
+                            <div class="field-top">
+                                <label for="fare">Fare</label>
+                                <input type="number" id="fare" min="3" max="80" step="0.25" value="18"
+                                       aria-label="Fare in dollars">
+                            </div>
+                            <input type="range" id="fare-range" min="3" max="80" step="0.25" value="18"
+                                   aria-label="Fare in dollars, slider">
+                        </div>
+
+                        <div class="field">
+                            <div class="field-top">
+                                <label for="trip-miles">Trip miles</label>
+                                <input type="number" id="trip-miles" min="0.5" max="60" step="0.1" value="8"
+                                       aria-label="Trip miles">
+                            </div>
+                            <input type="range" id="trip-miles-range" min="0.5" max="60" step="0.1" value="8"
+                                   aria-label="Trip miles, slider">
+                        </div>
+
+                        <div class="field">
+                            <div class="field-top">
+                                <label for="trip-minutes">Trip minutes</label>
+                                <input type="number" id="trip-minutes" min="2" max="120" step="1" value="18"
+                                       aria-label="Trip minutes">
+                            </div>
+                            <input type="range" id="trip-minutes-range" min="2" max="120" step="1" value="18"
+                                   aria-label="Trip minutes, slider">
+                        </div>
+
+                        <div class="field">
+                            <div class="field-top">
+                                <label for="pickup-miles">Pickup miles</label>
+                                <input type="number" id="pickup-miles" min="0" max="20" step="0.1" value="3"
+                                       aria-label="Pickup miles">
+                            </div>
+                            <input type="range" id="pickup-miles-range" min="0" max="20" step="0.1" value="3"
+                                   aria-label="Pickup miles, slider">
+                        </div>
+
+                        <div class="field">
+                            <div class="field-top">
+                                <label for="pickup-minutes">Pickup minutes</label>
+                                <input type="number" id="pickup-minutes" min="0" max="40" step="1" value="7"
+                                       aria-label="Pickup minutes">
+                            </div>
+                            <input type="range" id="pickup-minutes-range" min="0" max="40" step="1" value="7"
+                                   aria-label="Pickup minutes, slider">
+                        </div>
+
+                        <div class="field">
+                            <div class="field-top">
+                                <label for="cost">IRS-style vehicle cost, per mile</label>
+                                <input type="number" id="cost" min="0.30" max="1.50" step="0.01" value="0.72"
+                                       aria-label="Vehicle cost per mile, in dollars">
+                            </div>
+                            <input type="range" id="cost-range" min="0.30" max="1.50" step="0.01" value="0.72"
+                                   aria-label="Vehicle cost per mile, slider">
+                            <p class="field-note">72&cent; is a starting point, not your exact cost &mdash; it is a mileage rate, not tax advice, and your own fuel, tyres, insurance and depreciation will land somewhere else.</p>
+                        </div>
+
+                        <div class="field">
+                            <label class="toggle" for="return-home">
+                                <span>Count the drive back.</span>
+                                <input type="checkbox" id="return-home" checked>
+                                <span class="toggle-track" aria-hidden="true"></span>
+                            </label>
+                            <p class="field-note">Adds the pickup distance and time again, for getting back to where you started.</p>
+                        </div>
+                    </div>
+
+                    <div class="panel examples">
+                        <h2>Try one of these</h2>
+                        <div class="example-row">
+                            <button type="button" class="example-btn" data-ex="looks-fine">Looks fine</button>
+                            <button type="button" class="example-btn" data-ex="short-clean">Short and clean</button>
+                            <button type="button" class="example-btn" data-ex="long-haul">Long haul</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ---------------- results ---------------- -->
+                <div class="results-col">
+                    <div class="panel">
+                        <div class="headline">
+                            <div class="headline-label">True hourly</div>
+                            <div class="headline-figure" id="true-hourly">&mdash;</div>
+                            <div class="headline-unit">per hour, door to door</div>
+                        </div>
+
+                        <p class="verdict" id="verdict" role="status" aria-live="polite">&mdash;</p>
+
+                        <ul class="rows">
+                            <li><span class="k">Uber-style hourly</span><span class="v" id="shown-hourly">&mdash;</span></li>
+                            <li><span class="k">Total miles</span><span class="v" id="total-miles">&mdash;</span></li>
+                            <li><span class="k">Total time</span><span class="v" id="total-minutes">&mdash;</span></li>
+                            <li class="spent"><span class="k">Vehicle cost</span><span class="v" id="vehicle-cost">&mdash;</span></li>
+                            <li><span class="k">Left after the car</span><span class="v" id="left-after">&mdash;</span></li>
+                            <li><span class="k">Per mile</span><span class="v" id="per-mile">&mdash;</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="tool-foot">
+                        <p><a class="inline" href="https://play.google.com/store/apps/details?id=io.puddlejumper.app" target="_blank" rel="noopener">PuddleJumper</a> runs this check on the live offer, including your zones, before the 10 seconds are gone.</p>
+                        <a class="cta-button" href="https://play.google.com/store/apps/details?id=io.puddlejumper.app" target="_blank" rel="noopener">Get the Android beta</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="/privacy.html">Privacy Policy</a></li>
+                    <li><a href="/terms.html">Terms of Service</a></li>
+                    <li><a href="/help.html">Help &amp; Support</a></li>
+                    <li><a href="mailto:support@puddlejumper.io">Contact</a></li>
+                    <li><a href="/delete-account.html">Delete Account</a></li>
+                </ul>
+                <p class="copyright">&copy; 2026 PuddleJumper. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            "use strict";
+
+            // Every input is a (number field, slider) pair on the same value, so either
+            // can be edited and the other follows. Keeping the pairs in one table is
+            // what makes the sync a loop rather than twelve listeners.
+            var FIELDS = [
+                "fare", "trip-miles", "trip-minutes",
+                "pickup-miles", "pickup-minutes", "cost"
+            ];
+
+            var EXAMPLES = {
+                "looks-fine":  { fare: 18, "trip-miles": 14, "trip-minutes": 28,
+                                 "pickup-miles": 8, "pickup-minutes": 12,
+                                 cost: 0.72, "return-home": true },
+                "short-clean": { fare: 11, "trip-miles": 3,  "trip-minutes": 10,
+                                 "pickup-miles": 1, "pickup-minutes": 4,
+                                 cost: 0.72, "return-home": true },
+                "long-haul":   { fare: 42, "trip-miles": 38, "trip-minutes": 50,
+                                 "pickup-miles": 6, "pickup-minutes": 10,
+                                 cost: 0.72, "return-home": true }
+            };
+
+            var el = {};
+            FIELDS.forEach(function (id) {
+                el[id] = document.getElementById(id);
+                el[id + "-range"] = document.getElementById(id + "-range");
+            });
+            var returnHome = document.getElementById("return-home");
+
+            var out = {
+                trueHourly:  document.getElementById("true-hourly"),
+                verdict:     document.getElementById("verdict"),
+                shownHourly: document.getElementById("shown-hourly"),
+                totalMiles:  document.getElementById("total-miles"),
+                totalMinutes:document.getElementById("total-minutes"),
+                vehicleCost: document.getElementById("vehicle-cost"),
+                leftAfter:   document.getElementById("left-after"),
+                perMile:     document.getElementById("per-mile")
+            };
+
+            function clamp(n, lo, hi) {
+                return Math.min(hi, Math.max(lo, n));
+            }
+
+            // A half-typed number field reads as NaN; fall back to the slider, which is
+            // always valid, so the results never blank out mid-keystroke.
+            function read(id) {
+                var n = parseFloat(el[id].value);
+                if (!isFinite(n)) {
+                    n = parseFloat(el[id + "-range"].value);
+                }
+                return clamp(n, parseFloat(el[id].min), parseFloat(el[id].max));
+            }
+
+            function money(n) {
+                return (n < 0 ? "-$" : "$") + Math.abs(n).toFixed(2);
+            }
+
+            function calculate() {
+                var fare         = read("fare");
+                var tripMiles    = read("trip-miles");
+                var tripMinutes  = read("trip-minutes");
+                var pickupMiles  = read("pickup-miles");
+                var pickupMins   = read("pickup-minutes");
+                var costPerMile  = read("cost");
+                var back         = returnHome.checked;
+
+                var returnMiles = back ? pickupMiles : 0;
+                var returnMins  = back ? pickupMins  : 0;
+
+                var totalMiles   = tripMiles + pickupMiles + returnMiles;
+                var totalMinutes = tripMinutes + pickupMins + returnMins;
+                var vehicleCost  = totalMiles * costPerMile;
+                var leftAfter    = fare - vehicleCost;
+
+                var totalHours = totalMinutes / 60;
+                var tripHours  = tripMinutes / 60;
+
+                var trueHourly  = totalHours > 0 ? leftAfter / totalHours : 0;
+                var shownHourly = tripHours  > 0 ? fare / tripHours       : 0;
+                var perMile     = totalMiles > 0 ? fare / totalMiles      : 0;
+
+                out.trueHourly.textContent   = money(trueHourly);
+                out.shownHourly.textContent  = money(shownHourly) + " / hr";
+                out.totalMiles.textContent   = totalMiles.toFixed(1) + " mi";
+                out.totalMinutes.textContent = Math.round(totalMinutes) + " min";
+                out.vehicleCost.textContent  = "-" + money(vehicleCost).replace("-", "");
+                out.leftAfter.textContent    = money(leftAfter);
+                out.perMile.textContent      = money(perMile) + " / mi";
+
+                // The band carries the colour AND the sentence, so the verdict never
+                // depends on colour alone.
+                var cls, words;
+                if (trueHourly < 15) {
+                    cls = "is-bad";
+                    words = "This ride paid the car, not you.";
+                } else if (trueHourly < 22) {
+                    cls = "is-edge";
+                    words = "Borderline. Only if you are already there.";
+                } else {
+                    cls = "is-good";
+                    words = "Worth the time, if the dropoff is somewhere you want to be.";
+                }
+                out.trueHourly.className = "headline-figure " + cls;
+                out.verdict.className    = "verdict " + cls;
+                out.verdict.textContent  = words;
+            }
+
+            // Wire each pair both ways, then recalculate on every input event.
+            FIELDS.forEach(function (id) {
+                var num = el[id];
+                var rng = el[id + "-range"];
+                num.addEventListener("input", function () {
+                    var n = parseFloat(num.value);
+                    if (isFinite(n)) {
+                        rng.value = clamp(n, parseFloat(num.min), parseFloat(num.max));
+                    }
+                    calculate();
+                });
+                // Snap an out-of-range typed value back into the field itself, but only
+                // once the user has left it — doing it on every keystroke fights typing.
+                num.addEventListener("blur", function () {
+                    num.value = read(id);
+                    rng.value = num.value;
+                    calculate();
+                });
+                rng.addEventListener("input", function () {
+                    num.value = rng.value;
+                    calculate();
+                });
+            });
+
+            returnHome.addEventListener("change", calculate);
+
+            document.querySelectorAll(".example-btn").forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    var ex = EXAMPLES[btn.getAttribute("data-ex")];
+                    if (!ex) { return; }
+                    FIELDS.forEach(function (id) {
+                        if (ex[id] !== undefined) {
+                            el[id].value = ex[id];
+                            el[id + "-range"].value = ex[id];
+                        }
+                    });
+                    returnHome.checked = !!ex["return-home"];
+                    calculate();
+                });
+            });
+
+            calculate();
+        })();
+    </script>
+</body>
+</html>

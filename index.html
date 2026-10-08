@@ -220,6 +220,26 @@
             color: #BDBDBD;
         }
 
+        /* Calculator teaser */
+        .calc-teaser {
+            padding: 80px 0;
+            background: #121212;
+            text-align: center;
+        }
+
+        .calc-teaser h2 {
+            font-size: 36px;
+            margin-bottom: 16px;
+            color: #FFFFFF;
+        }
+
+        .calc-teaser p {
+            color: #BDBDBD;
+            margin: 0 auto 32px;
+            font-size: 18px;
+            max-width: 620px;
+        }
+
         /* Pricing */
         .pricing {
             padding: 80px 0;
@@ -390,6 +410,7 @@
             display: flex;
             gap: 24px;
             list-style: none;
+            flex-wrap: wrap;
         }
 
         .footer-links a {
@@ -425,6 +446,7 @@
             .features h2,
             .how-it-works h2,
             .newsletter h2,
+            .calc-teaser h2,
             .pricing h2 {
                 font-size: 28px;
             }
@@ -448,6 +470,7 @@
                 <ul class="nav-links">
                     <li><a href="#features">Features</a></li>
                     <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="/calculator.html">Calculator</a></li>
                     <li><a href="#pricing">Pricing</a></li>
                     <li><a href="/help.html">Help</a></li>
                     <li><a href="https://blog.puddlejumper.io" target="_blank">Newsletter</a></li>
@@ -549,6 +572,14 @@
             </div>
         </section>
 
+        <section class="calc-teaser" id="calculator">
+            <div class="container">
+                <h2>See what a ride actually pays</h2>
+                <p>Fare is what Uber shows. Put in the miles and the minutes &mdash; including the drive to the pickup and the drive back &mdash; and see what is left.</p>
+                <a href="/calculator.html" class="cta-button">Run the numbers</a>
+            </div>
+        </section>
+
         <section class="pricing" id="pricing">
             <div class="container">
                 <h2>Simple pricing</h2>
@@ -575,6 +606,7 @@
                 <ul class="footer-links">
                     <li><a href="/privacy.html">Privacy Policy</a></li>
                     <li><a href="/terms.html">Terms of Service</a></li>
+                    <li><a href="/calculator.html">Calculator</a></li>
                     <li><a href="/help.html">Help & Support</a></li>
                     <li><a href="mailto:support@puddlejumper.io">Contact</a></li>
                     <li><a href="/delete-account.html">Delete Account</a></li>
