@@ -402,6 +402,37 @@
             color: #00FF00;
         }
 
+        /* Daily chart */
+        .chart-panel {
+            margin-bottom: 64px;
+        }
+
+        .chart-sub {
+            font-size: 14px;
+            color: #8E8E8E;
+            margin: -14px 0 18px;
+        }
+
+        .chart-empty {
+            color: #8E8E8E;
+            font-size: 15px;
+            padding: 28px 0;
+            text-align: center;
+        }
+
+        #chart svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .chart-foot {
+            font-size: 13px;
+            color: #8E8E8E;
+            margin-top: 12px;
+            text-wrap: balance;
+        }
+
         /* Tool footer / CTA */
         .tool-foot {
             margin-top: 28px;
@@ -555,22 +586,12 @@
 
                         <div class="field">
                             <div class="field-top">
-                                <label for="trip-miles">Trip miles</label>
-                                <input type="number" id="trip-miles" min="0.2" max="45" step="0.1" value="8"
-                                       aria-label="Trip miles">
+                                <label for="pickup-minutes">Pickup minutes</label>
+                                <input type="number" id="pickup-minutes" min="0" max="25" step="1" value="7"
+                                       aria-label="Pickup minutes">
                             </div>
-                            <input type="range" id="trip-miles-range" min="0.2" max="45" step="0.1" value="8"
-                                   aria-label="Trip miles, slider">
-                        </div>
-
-                        <div class="field">
-                            <div class="field-top">
-                                <label for="trip-minutes">Trip minutes</label>
-                                <input type="number" id="trip-minutes" min="1" max="90" step="1" value="18"
-                                       aria-label="Trip minutes">
-                            </div>
-                            <input type="range" id="trip-minutes-range" min="1" max="90" step="1" value="18"
-                                   aria-label="Trip minutes, slider">
+                            <input type="range" id="pickup-minutes-range" min="0" max="25" step="1" value="7"
+                                   aria-label="Pickup minutes, slider">
                         </div>
 
                         <div class="field">
@@ -585,12 +606,22 @@
 
                         <div class="field">
                             <div class="field-top">
-                                <label for="pickup-minutes">Pickup minutes</label>
-                                <input type="number" id="pickup-minutes" min="0" max="25" step="1" value="7"
-                                       aria-label="Pickup minutes">
+                                <label for="trip-minutes">Trip minutes</label>
+                                <input type="number" id="trip-minutes" min="1" max="90" step="1" value="18"
+                                       aria-label="Trip minutes">
                             </div>
-                            <input type="range" id="pickup-minutes-range" min="0" max="25" step="1" value="7"
-                                   aria-label="Pickup minutes, slider">
+                            <input type="range" id="trip-minutes-range" min="1" max="90" step="1" value="18"
+                                   aria-label="Trip minutes, slider">
+                        </div>
+
+                        <div class="field">
+                            <div class="field-top">
+                                <label for="trip-miles">Trip miles</label>
+                                <input type="number" id="trip-miles" min="0.2" max="45" step="0.1" value="8"
+                                       aria-label="Trip miles">
+                            </div>
+                            <input type="range" id="trip-miles-range" min="0.2" max="45" step="0.1" value="8"
+                                   aria-label="Trip miles, slider">
                         </div>
 
                         <div class="field">
@@ -673,6 +704,14 @@
                         <p><a class="inline" href="https://play.google.com/store/apps/details?id=io.puddlejumper.app" target="_blank" rel="noopener">PuddleJumper</a> runs this check on the live offer, including your zones, before the 10 seconds are gone.</p>
                         <a class="cta-button" href="https://play.google.com/store/apps/details?id=io.puddlejumper.app" target="_blank" rel="noopener">Get the Android beta</a>
                     </div>
+                </div>
+            </div>
+
+            <div class="panel chart-panel">
+                <h2>What offers have actually paid</h2>
+                <p class="chart-sub" id="chart-sub">Median true hourly, per day, from offers logged in Houston.</p>
+                <div id="chart" role="img" aria-label="Daily median true hourly rate">
+                    <p class="chart-empty">No ride data yet</p>
                 </div>
             </div>
         </div>
@@ -914,6 +953,118 @@
             });
 
             calculate();
+
+            // ================================================================
+            // THE DAILY CHART
+            //
+            // The page stays static: a nightly job on the database box writes
+            // /data/ride_outcomes.json out of public.ride_outcome_daily, and this
+            // only fetches that file. Nothing here can reach decision_log, which is
+            // the point -- that table holds coordinates and raw OCR, and this one
+            // holds counts and medians.
+            //
+            // Days with fewer than five offers are already excluded upstream, so a
+            // median is never drawn from two rides.
+            // ================================================================
+            var chartEl = document.getElementById("chart");
+            var chartSub = document.getElementById("chart-sub");
+            var DAYS = null;
+
+            function money0(n) { return "$" + Math.round(n); }
+
+            function drawChart() {
+                if (!DAYS || !DAYS.length) { return; }
+                var W = 720, H = 240, L = 44, R = 12, T = 16, B = 28;
+                var vals = DAYS.map(function (d) { return d.median_true_hourly; });
+                var line = read("line");
+                var lo = Math.min.apply(null, vals.concat([line]));
+                var hi = Math.max.apply(null, vals.concat([line]));
+                var pad = Math.max(1, (hi - lo) * 0.2);
+                lo = Math.max(0, Math.floor(lo - pad));
+                hi = Math.ceil(hi + pad);
+
+                var x = function (i) {
+                    return DAYS.length === 1 ? (L + (W - L - R) / 2)
+                        : L + i * (W - L - R) / (DAYS.length - 1);
+                };
+                var y = function (v) { return T + (hi - v) / (hi - lo) * (H - T - B); };
+
+                var parts = [];
+                // horizontal gridlines, labelled with values the chart actually reaches
+                var ticks = 4;
+                for (var t = 0; t <= ticks; t++) {
+                    var v = lo + (hi - lo) * t / ticks;
+                    parts.push('<line x1="' + L + '" y1="' + y(v).toFixed(1) + '" x2="' + (W - R) +
+                               '" y2="' + y(v).toFixed(1) + '" stroke="#2D2D2D" stroke-width="1"/>');
+                    parts.push('<text x="' + (L - 8) + '" y="' + (y(v) + 4).toFixed(1) +
+                               '" fill="#8E8E8E" font-size="12" text-anchor="end">' + money0(v) + '</text>');
+                }
+
+                // the driver's own line, so the series is read against THEIR bar
+                if (line >= lo && line <= hi) {
+                    parts.push('<line x1="' + L + '" y1="' + y(line).toFixed(1) + '" x2="' + (W - R) +
+                               '" y2="' + y(line).toFixed(1) +
+                               '" stroke="#00FF00" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.75"/>');
+                    parts.push('<text x="' + (W - R) + '" y="' + (y(line) - 6).toFixed(1) +
+                               '" fill="#00FF00" font-size="12" text-anchor="end">your line</text>');
+                }
+
+                var d = DAYS.map(function (p, i) {
+                    return (i ? "L" : "M") + x(i).toFixed(1) + " " + y(p.median_true_hourly).toFixed(1);
+                }).join(" ");
+                parts.push('<path d="' + d + '" fill="none" stroke="#FFFFFF" stroke-width="2" ' +
+                           'stroke-linejoin="round" stroke-linecap="round"/>');
+
+                DAYS.forEach(function (p, i) {
+                    var under = p.median_true_hourly < line;
+                    parts.push('<circle cx="' + x(i).toFixed(1) + '" cy="' + y(p.median_true_hourly).toFixed(1) +
+                               '" r="3.5" fill="' + (under ? "#FF5252" : "#00FF00") + '"><title>' +
+                               p.day + ": " + money0(p.median_true_hourly) + "/hr, " + p.offers +
+                               " offers, " + p.cleared_line + ' cleared</title></circle>');
+                });
+
+                // first, middle and last date only -- 15 labels do not fit on a phone
+                [0, Math.floor((DAYS.length - 1) / 2), DAYS.length - 1].forEach(function (i, k, a) {
+                    if (a.indexOf(i) !== k) { return; }
+                    parts.push('<text x="' + x(i).toFixed(1) + '" y="' + (H - 8) +
+                               '" fill="#8E8E8E" font-size="12" text-anchor="' +
+                               (i === 0 ? "start" : i === DAYS.length - 1 ? "end" : "middle") + '">' +
+                               DAYS[i].day.slice(5) + '</text>');
+                });
+
+                chartEl.innerHTML = '<svg viewBox="0 0 ' + W + " " + H +
+                    '" preserveAspectRatio="xMidYMid meet">' + parts.join("") + '</svg>' +
+                    '<p class="chart-foot">Each point is one day\u2019s median offer, after the car. ' +
+                    'Green sits at or above your line, red below it. Days with fewer than five ' +
+                    'offers are left out.</p>';
+                chartEl.setAttribute("aria-label",
+                    "Median true hourly by day, " + DAYS[0].day + " to " + DAYS[DAYS.length - 1].day +
+                    ", ranging from " + money0(Math.min.apply(null, vals)) +
+                    " to " + money0(Math.max.apply(null, vals)) + " per hour");
+            }
+
+            fetch("/data/ride_outcomes.json", { cache: "no-store" })
+                .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("http " + r.status)); })
+                .then(function (j) {
+                    var days = (j && j.days) || [];
+                    days = days.filter(function (d) {
+                        return d && typeof d.median_true_hourly === "number" && d.offers > 0;
+                    });
+                    if (!days.length) { return; }          // leave "No ride data yet" in place
+                    DAYS = days;
+                    if (j.generated_at) {
+                        chartSub.textContent = "Median true hourly, per day, from " +
+                            days.reduce(function (a, d) { return a + d.offers; }, 0) +
+                            " offers logged in Houston.";
+                    }
+                    drawChart();
+                })
+                .catch(function () { /* the sliders above do not depend on this */ });
+
+            // the chart reads against the driver's own line, so it follows the slider
+            ["line", "line-range"].forEach(function (id) {
+                document.getElementById(id).addEventListener("input", drawChart);
+            });
         })();
     </script>
 </body>
