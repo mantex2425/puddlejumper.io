@@ -631,7 +631,9 @@
                             <button type="button" class="example-btn" data-ex="looks-fine">Looks fine</button>
                             <button type="button" class="example-btn" data-ex="short-clean">Short and clean</button>
                             <button type="button" class="example-btn" data-ex="long-haul">Long haul</button>
+                            <button type="button" class="example-btn" data-ex="typical">A typical Houston offer</button>
                         </div>
+                        <p class="field-note">&ldquo;Typical&rdquo; is the median of 1,128 offers logged in Houston over 90 days &mdash; fare, distance and time each taken at the middle of the pile.</p>
                     </div>
                 </div>
 
@@ -712,6 +714,14 @@
                                  cost: 0.35, "return-home": true },
                 "long-haul":   { fare: 42, "trip-miles": 38, "trip-minutes": 50,
                                  "pickup-miles": 6, "pickup-minutes": 10,
+                                 cost: 0.35, "return-home": true },
+                // THE MEDIAN OFFER, not an invented one: fare, trip and pickup each at
+                // p50 of 1,128 real offers over 90 days (fare $7.08, trip 5.8 mi /
+                // 15 min, pickup 2.6 mi / 8 min). It scores 60 against a $15.50 line,
+                // which is the single most useful thing this page can show a driver --
+                // the middle of the market does not clear.
+                "typical":     { fare: 7.08, "trip-miles": 5.8, "trip-minutes": 15,
+                                 "pickup-miles": 2.6, "pickup-minutes": 8,
                                  cost: 0.35, "return-home": true }
             };
 
