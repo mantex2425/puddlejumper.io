@@ -559,13 +559,13 @@
 
                         <div class="field">
                             <div class="field-top">
-                                <label for="cost">IRS-style vehicle cost, per mile</label>
-                                <input type="number" id="cost" min="0.30" max="1.50" step="0.01" value="0.72"
+                                <label for="cost">Vehicle cost, per mile</label>
+                                <input type="number" id="cost" min="0.30" max="1.50" step="0.01" value="0.35"
                                        aria-label="Vehicle cost per mile, in dollars">
                             </div>
-                            <input type="range" id="cost-range" min="0.30" max="1.50" step="0.01" value="0.72"
+                            <input type="range" id="cost-range" min="0.30" max="1.50" step="0.01" value="0.35"
                                    aria-label="Vehicle cost per mile, slider">
-                            <p class="field-note">72&cent; is a starting point, not your exact cost &mdash; it is a mileage rate, not tax advice, and your own fuel, tyres, insurance and depreciation will land somewhere else.</p>
+                            <p class="field-note">35&cent; is a starting point, not your exact cost &mdash; fuel, tyres, maintenance and depreciation. The IRS mileage rate of 72&cent; is higher because it also covers insurance and registration, which you pay whether or not you take the ride. Slide it to whatever your car really costs. This is not tax advice.</p>
                         </div>
 
                         <div class="field">
@@ -648,13 +648,13 @@
             var EXAMPLES = {
                 "looks-fine":  { fare: 18, "trip-miles": 14, "trip-minutes": 28,
                                  "pickup-miles": 8, "pickup-minutes": 12,
-                                 cost: 0.72, "return-home": true },
+                                 cost: 0.35, "return-home": true },
                 "short-clean": { fare: 11, "trip-miles": 3,  "trip-minutes": 10,
                                  "pickup-miles": 1, "pickup-minutes": 4,
-                                 cost: 0.72, "return-home": true },
+                                 cost: 0.35, "return-home": true },
                 "long-haul":   { fare: 42, "trip-miles": 38, "trip-minutes": 50,
                                  "pickup-miles": 6, "pickup-minutes": 10,
-                                 cost: 0.72, "return-home": true }
+                                 cost: 0.35, "return-home": true }
             };
 
             var el = {};
