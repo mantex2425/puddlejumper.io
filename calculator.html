@@ -303,6 +303,49 @@
         .is-edge   { color: #FFC107; }
         .is-good   { color: #00FF00; }
 
+        /* The PuddleJumper score sits beside the honest dollar figure rather than
+           replacing it: they answer two different questions. */
+        .dsi {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 16px 18px;
+            margin-bottom: 22px;
+            background: #121212;
+            border: 1px solid #2D2D2D;
+            border-radius: 10px;
+        }
+
+        .dsi-left {
+            flex: 0 0 auto;
+            text-align: center;
+            min-width: 86px;
+        }
+
+        .dsi-figure {
+            font-size: 42px;
+            font-weight: 700;
+            line-height: 1.05;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .dsi-right {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .dsi-word {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .dsi-note {
+            font-size: 13px;
+            color: #8E8E8E;
+            text-wrap: balance;
+        }
+
         .rows {
             list-style: none;
         }
@@ -569,6 +612,17 @@
                         </div>
 
                         <div class="field">
+                            <div class="field-top">
+                                <label for="line">Your line, per hour</label>
+                                <input type="number" id="line" min="8" max="30" step="0.25" value="15.50"
+                                       aria-label="Your line, dollars per hour">
+                            </div>
+                            <input type="range" id="line-range" min="8" max="30" step="0.25" value="15.50"
+                                   aria-label="Your line, dollars per hour, slider">
+                            <p class="field-note">The hour you want <em>after</em> the car is paid for. PuddleJumper scores every offer against this, and 100 means it cleared.</p>
+                        </div>
+
+                        <div class="field">
                             <label class="toggle" for="return-home">
                                 <span>Count the drive back.</span>
                                 <input type="checkbox" id="return-home" checked>
@@ -599,6 +653,17 @@
 
                         <p class="verdict" id="verdict" role="status" aria-live="polite">&mdash;</p>
 
+                        <div class="dsi">
+                            <div class="dsi-left">
+                                <div class="headline-label">PuddleJumper score</div>
+                                <div class="dsi-figure" id="dsi">&mdash;</div>
+                            </div>
+                            <div class="dsi-right">
+                                <p class="dsi-word" id="dsi-word" role="status" aria-live="polite">&mdash;</p>
+                                <p class="dsi-note" id="dsi-note">&mdash;</p>
+                            </div>
+                        </div>
+
                         <ul class="rows">
                             <li><span class="k">Uber-style hourly</span><span class="v" id="shown-hourly">&mdash;</span></li>
                             <li><span class="k">Total miles</span><span class="v" id="total-miles">&mdash;</span></li>
@@ -606,6 +671,7 @@
                             <li class="spent"><span class="k">Vehicle cost</span><span class="v" id="vehicle-cost">&mdash;</span></li>
                             <li><span class="k">Left after the car</span><span class="v" id="left-after">&mdash;</span></li>
                             <li><span class="k">Per mile</span><span class="v" id="per-mile">&mdash;</span></li>
+                            <li><span class="k">Needed on screen</span><span class="v" id="needed">&mdash;</span></li>
                         </ul>
                     </div>
 
@@ -642,7 +708,7 @@
             // what makes the sync a loop rather than twelve listeners.
             var FIELDS = [
                 "fare", "trip-miles", "trip-minutes",
-                "pickup-miles", "pickup-minutes", "cost"
+                "pickup-miles", "pickup-minutes", "cost", "line"
             ];
 
             var EXAMPLES = {
@@ -672,6 +738,10 @@
                 totalMinutes:document.getElementById("total-minutes"),
                 vehicleCost: document.getElementById("vehicle-cost"),
                 leftAfter:   document.getElementById("left-after"),
+                dsi:         document.getElementById("dsi"),
+                dsiWord:     document.getElementById("dsi-word"),
+                dsiNote:     document.getElementById("dsi-note"),
+                needed:      document.getElementById("needed"),
                 perMile:     document.getElementById("per-mile")
             };
 
@@ -716,6 +786,57 @@
                 var trueHourly  = totalHours > 0 ? leftAfter / totalHours : 0;
                 var shownHourly = tripHours  > 0 ? fare / tripHours       : 0;
                 var perMile     = totalMiles > 0 ? fare / totalMiles      : 0;
+
+                // ------------------------------------------------------------------
+                // THE PUDDLEJUMPER SCORE, exactly as app_private.decision_engine_v3
+                // computes it -- read off the live function, 2026-10-08:
+                //
+                //   committed     = pickup + trip + return, in miles AND minutes
+                //   committed_mph = committed_miles / committed_hours
+                //   gross_shown   = FLOOR(fare / committed_hours) to the cent
+                //   needed_gross  = CEIL(line + committed_mph * cost) to the cent
+                //   dsi           = round(gross_shown / needed_gross * 100)
+                //
+                // The floor and the ceiling are not cosmetic, and nor is the clamp
+                // below: plain rounding let a ratio of 99.6 print "100" beside a
+                // decline, so 100 is reserved for offers that actually cleared and 99
+                // is the highest a short offer can score.
+                //
+                // Cost enters as miles per HOUR, so the penalty falls on speed rather
+                // than distance -- which is why two five-mile rides can score
+                // differently. The unpaid legs are in the DENOMINATOR, never deducted
+                // from the fare; deducting as well was the double-count v3 removed.
+                var line = read("line");
+                var grossShown = totalHours > 0
+                    ? Math.floor(fare / totalHours * 100) / 100 : null;
+                var neededGross = totalHours > 0
+                    ? Math.ceil((line + (totalMiles / totalHours) * costPerMile) * 100) / 100 : null;
+
+                var dsi = null;
+                if (grossShown !== null && neededGross !== null && neededGross > 0) {
+                    dsi = Math.round(grossShown / neededGross * 100);
+                    dsi = grossShown >= neededGross ? Math.max(dsi, 100) : Math.min(dsi, 99);
+                }
+
+                var clears = dsi !== null && dsi >= 100;
+                out.dsi.textContent     = dsi === null ? "\u2014" : String(dsi);
+                out.dsi.className       = "dsi-figure " + (clears ? "is-good" : "is-bad");
+                out.dsiWord.className   = "dsi-word " + (clears ? "is-good" : "is-bad");
+                out.dsiWord.textContent = dsi === null ? "\u2014"
+                    : (clears ? "Clears your line" : "Below your line");
+                out.needed.textContent  = neededGross === null ? "\u2014"
+                    : money(neededGross) + " / hr";
+                // Name the gap only when it is worth naming -- 50 cents, the same
+                // threshold the server uses for its own "needs $X on this trip" line.
+                out.dsiNote.textContent = (neededGross !== null && grossShown !== null)
+                    ? (clears
+                        ? "Needed " + money(neededGross) + "/hr on screen; it shows "
+                          + money(grossShown) + "."
+                        : (neededGross - grossShown >= 0.50
+                            ? "Needed " + money(neededGross) + "/hr on screen; it shows "
+                              + money(grossShown) + "."
+                            : "Just short of the " + money(neededGross) + "/hr this trip needed."))
+                    : "\u2014";
 
                 out.trueHourly.textContent   = money(trueHourly);
                 out.shownHourly.textContent  = money(shownHourly) + " / hr";
