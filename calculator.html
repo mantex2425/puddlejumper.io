@@ -278,11 +278,35 @@
             color: #9E9E9E;
         }
 
-        .headline-figure {
-            font-size: 64px;
+        .figures {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .fig {
+            text-align: center;
+        }
+
+        /* The score is the biggest thing on the page, because it is the number
+           the app shows and the one a driver should leave remembering. The
+           dollar figure stays beside it as the plain fact it is. */
+        .score-figure {
+            font-size: 76px;
+            font-weight: 700;
+            line-height: 1;
+            margin: 4px 0 2px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .money-figure {
+            font-size: 34px;
             font-weight: 700;
             line-height: 1.1;
-            margin: 6px 0 2px;
+            margin: 10px 0 2px;
+            color: #FFFFFF;
             font-variant-numeric: tabular-nums;
         }
 
@@ -295,7 +319,7 @@
             font-size: 17px;
             font-weight: 600;
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 4px;
             text-wrap: balance;
         }
 
@@ -303,44 +327,9 @@
         .is-edge   { color: #FFC107; }
         .is-good   { color: #00FF00; }
 
-        /* The PuddleJumper score sits beside the honest dollar figure rather than
-           replacing it: they answer two different questions. */
-        .dsi {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            padding: 16px 18px;
-            margin-bottom: 22px;
-            background: #121212;
-            border: 1px solid #2D2D2D;
-            border-radius: 10px;
-        }
-
-        .dsi-left {
-            flex: 0 0 auto;
-            text-align: center;
-            min-width: 86px;
-        }
-
-        .dsi-figure {
-            font-size: 42px;
-            font-weight: 700;
-            line-height: 1.05;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .dsi-right {
-            flex: 1 1 auto;
-            min-width: 0;
-        }
-
-        .dsi-word {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
         .dsi-note {
+            text-align: center;
+            margin-bottom: 22px;
             font-size: 13px;
             color: #8E8E8E;
             text-wrap: balance;
@@ -514,8 +503,12 @@
             .panel {
                 padding: 20px;
             }
-            .headline-figure {
-                font-size: 52px;
+            .score-figure {
+                font-size: 62px;
+            }
+
+            .money-figure {
+                font-size: 30px;
             }
         }
     </style>
@@ -646,23 +639,22 @@
                 <div class="results-col">
                     <div class="panel">
                         <div class="headline">
-                            <div class="headline-label">True hourly</div>
-                            <div class="headline-figure" id="true-hourly">&mdash;</div>
-                            <div class="headline-unit">per hour, door to door</div>
+                            <div class="figures">
+                                <div class="fig">
+                                    <div class="headline-label">PuddleJumper score</div>
+                                    <div class="score-figure" id="dsi">&mdash;</div>
+                                    <div class="headline-unit">100 is your line</div>
+                                </div>
+                                <div class="fig">
+                                    <div class="headline-label">True hourly</div>
+                                    <div class="money-figure" id="true-hourly">&mdash;</div>
+                                    <div class="headline-unit">per hour, door to door</div>
+                                </div>
+                            </div>
                         </div>
 
                         <p class="verdict" id="verdict" role="status" aria-live="polite">&mdash;</p>
-
-                        <div class="dsi">
-                            <div class="dsi-left">
-                                <div class="headline-label">PuddleJumper score</div>
-                                <div class="dsi-figure" id="dsi">&mdash;</div>
-                            </div>
-                            <div class="dsi-right">
-                                <p class="dsi-word" id="dsi-word" role="status" aria-live="polite">&mdash;</p>
-                                <p class="dsi-note" id="dsi-note">&mdash;</p>
-                            </div>
-                        </div>
+                        <p class="dsi-note" id="dsi-note">&mdash;</p>
 
                         <ul class="rows">
                             <li><span class="k">Uber-style hourly</span><span class="v" id="shown-hourly">&mdash;</span></li>
@@ -739,7 +731,6 @@
                 vehicleCost: document.getElementById("vehicle-cost"),
                 leftAfter:   document.getElementById("left-after"),
                 dsi:         document.getElementById("dsi"),
-                dsiWord:     document.getElementById("dsi-word"),
                 dsiNote:     document.getElementById("dsi-note"),
                 needed:      document.getElementById("needed"),
                 perMile:     document.getElementById("per-mile")
@@ -819,12 +810,8 @@
                 }
 
                 var clears = dsi !== null && dsi >= 100;
-                out.dsi.textContent     = dsi === null ? "\u2014" : String(dsi);
-                out.dsi.className       = "dsi-figure " + (clears ? "is-good" : "is-bad");
-                out.dsiWord.className   = "dsi-word " + (clears ? "is-good" : "is-bad");
-                out.dsiWord.textContent = dsi === null ? "\u2014"
-                    : (clears ? "Clears your line" : "Below your line");
-                out.needed.textContent  = neededGross === null ? "\u2014"
+                out.dsi.textContent    = dsi === null ? "\u2014" : String(dsi);
+                out.needed.textContent = neededGross === null ? "\u2014"
                     : money(neededGross) + " / hr";
                 // Name the gap only when it is worth naming -- 50 cents, the same
                 // threshold the server uses for its own "needs $X on this trip" line.
@@ -846,22 +833,33 @@
                 out.leftAfter.textContent    = money(leftAfter);
                 out.perMile.textContent      = money(perMile) + " / mi";
 
-                // The band carries the colour AND the sentence, so the verdict never
-                // depends on colour alone.
+                // ONE NUMBER DECIDES, so the figure and the sentence cannot disagree.
+                //
+                // These bands used to read off the dollar figure against a fixed $15 /
+                // $22, which second-guessed the driver's own line the moment the line
+                // became an input: "Long haul" scored 118 against a $15.50 line -- a
+                // clear pass -- while $21.00/hr fell inside the generic band and printed
+                // amber beside it. A green number under a failing colour is the exact
+                // thing FrogDisplay forbids on the device, and it has no more business
+                // here. The score now carries the judgement; the dollars are the fact,
+                // and stay white.
+                //
+                // 120 is "comfortably over" rather than a second threshold: the verdict
+                // is still the line, and nothing below 100 is ever anything but short.
                 var cls, words;
-                if (trueHourly < 15) {
+                if (dsi === null || dsi < 100) {
                     cls = "is-bad";
                     words = "This ride paid the car, not you.";
-                } else if (trueHourly < 22) {
+                } else if (dsi < 120) {
                     cls = "is-edge";
                     words = "Borderline. Only if you are already there.";
                 } else {
                     cls = "is-good";
                     words = "Worth the time, if the dropoff is somewhere you want to be.";
                 }
-                out.trueHourly.className = "headline-figure " + cls;
-                out.verdict.className    = "verdict " + cls;
-                out.verdict.textContent  = words;
+                out.dsi.className       = "score-figure " + cls;
+                out.verdict.className   = "verdict " + cls;
+                out.verdict.textContent = words;
             }
 
             // Wire each pair both ways, then recalculate on every input event.
