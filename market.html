@@ -139,23 +139,40 @@
 
         #chart svg { display: block; width: 100%; height: auto; }
 
-        .chart-foot {
-            font-size: 13px;
-            color: #8E8E8E;
-            margin: 14px 0 0;
-            text-wrap: balance;
+        /* The sliders live INSIDE the chart panel, hard against the plot, so moving
+           one plainly changes the picture rather than filling in a form below it.
+           They are NOT drawn as the axes: this chart's axes are time, share and
+           DSI, and cost and keep are parameters. Labelling a parameter as an axis
+           would assert a relationship the chart does not show -- and a vertical
+           range input is a keyboard and screen-reader problem on top. The axis
+           TITLES carry the live values instead, so a drag visibly redraws them. */
+        .axis-control { margin: 0 0 4px; }
+        .axis-control .field { margin: 0; }
+        .axis-left   { margin-bottom: 14px; }
+        .axis-bottom { margin-top: 18px; }
+        .axis-window {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid #2D2D2D;
         }
 
-        .swatch-green,
-        .swatch-line {
-            display: inline-block;
-            width: 11px;
-            margin-right: 5px;
-            vertical-align: baseline;
+        .explain p {
+            color: #BDBDBD;
+            font-size: 15px;
+            margin-bottom: 16px;
+            text-wrap: pretty;
         }
 
-        .swatch-green { height: 11px; border-radius: 2px; background: #00FF00; }
-        .swatch-line  { height: 0; border-top: 2px solid #FFFFFF; margin-left: 16px; }
+        .explain p:last-child { margin-bottom: 0; }
+
+        .explain .why {
+            color: #E0E0E0;
+            border-left: 2px solid #00FF00;
+            padding-left: 16px;
+        }
+
+        .explain a { color: #00FF00; text-decoration: none; font-weight: 600; }
+        .explain a:hover { text-decoration: underline; }
 
         .chart-empty {
             color: #8E8E8E;
@@ -315,53 +332,66 @@
             <div class="panel">
                 <p class="headline-line" id="headline" role="status" aria-live="polite">&mdash;</p>
                 <p class="headline-sub" id="headline-sub">Set the two numbers below.</p>
+                <div class="axis-control axis-left">
+                <div class="field">
+                    <div class="field-top">
+                        <label for="keep">What you need to keep, per hour</label>
+                        <input type="number" id="keep" min="8" max="30" step="1" value="16"
+                               aria-label="Dollars to keep per hour, after the car">
+                    </div>
+                    <input type="range" id="keep-range" min="8" max="30" step="1" value="16"
+                           aria-label="Dollars to keep per hour, slider">
+                    <p class="field-note">What is left <em>after</em> the car is paid for &mdash;
+                        not what Uber pays.</p>
+                </div>
+                </div>
+
                 <div id="chart" role="img" aria-label="Share of offers that cleared the line, by day">
                     <p class="chart-empty">No offer data yet</p>
                 </div>
+
+                <div class="axis-control axis-bottom">
+                <div class="field">
+                    <div class="field-top">
+                        <label for="cost">What the car costs, per mile</label>
+                        <input type="number" id="cost" min="0" max="1.50" step="0.01" value="0.35"
+                               aria-label="Vehicle cost per mile, in dollars">
+                    </div>
+                    <input type="range" id="cost-range" min="0" max="1.50" step="0.01" value="0.35"
+                           aria-label="Vehicle cost per mile, slider">
+                    <p class="field-note">35&cent; is gas and wear. Slide it to <strong>zero</strong> to
+                        see the offers the way the cards showed them, with the car pretended
+                        free. The IRS rate of 72&cent; also covers insurance and registration,
+                        which you pay whether or not you take the ride.</p>
+                </div>
+                </div>
+
+                <div class="axis-control axis-window">
+                <div class="field">
+                    <div class="field-top">
+                        <label for="days">Days shown</label>
+                        <input type="number" id="days" min="7" max="90" step="1" value="90"
+                               aria-label="How many days of offers to show">
+                    </div>
+                    <input type="range" id="days-range" min="7" max="90" step="1" value="90"
+                           aria-label="How many days of offers to show, slider">
+                    <p class="field-note" id="days-note">The window, counted back from the most
+                        recent day with offers.</p>
+                </div>
+                </div>
             </div>
 
-            <div class="panel">
-                <h2>Your numbers</h2>
-                <div class="controls">
-                    <div class="field">
-                        <div class="field-top">
-                            <label for="cost">What the car costs, per mile</label>
-                            <input type="number" id="cost" min="0" max="1.50" step="0.01" value="0.35"
-                                   aria-label="Vehicle cost per mile, in dollars">
-                        </div>
-                        <input type="range" id="cost-range" min="0" max="1.50" step="0.01" value="0.35"
-                               aria-label="Vehicle cost per mile, slider">
-                        <p class="field-note">35&cent; is gas and wear. Slide it to <strong>zero</strong> to
-                            see the offers the way the cards showed them, with the car pretended
-                            free. The IRS rate of 72&cent; also covers insurance and registration,
-                            which you pay whether or not you take the ride.</p>
-                    </div>
-
-                    <div class="field">
-                        <div class="field-top">
-                            <label for="keep">What you need to keep, per hour</label>
-                            <input type="number" id="keep" min="8" max="30" step="1" value="16"
-                                   aria-label="Dollars to keep per hour, after the car">
-                        </div>
-                        <input type="range" id="keep-range" min="8" max="30" step="1" value="16"
-                               aria-label="Dollars to keep per hour, slider">
-                        <p class="field-note">What is left <em>after</em> the car is paid for &mdash;
-                            not what Uber pays.</p>
-                    </div>
-
-                    <div class="field">
-                        <div class="field-top">
-                            <label for="days">Days shown</label>
-                            <input type="number" id="days" min="7" max="90" step="1" value="90"
-                                   aria-label="How many days of offers to show">
-                        </div>
-                        <input type="range" id="days-range" min="7" max="90" step="1" value="90"
-                               aria-label="How many days of offers to show, slider">
-                        <p class="field-note" id="days-note">The window, counted back from the most
-                            recent day with offers.</p>
-                    </div>
-
-                </div>
+            <div class="panel explain">
+                <p>DSI scores the middle offer against your line. 100 means that offer
+                   cleared. The green bars are the share of offers that reached 100. A day
+                   can show a DSI near 100 and still clear almost none, because the line is
+                   the middle offer, not the count. Uber shows the fare. It does not show
+                   how few offers clear after the car is paid.</p>
+                <p class="why">On a shift you get one offer and about ten seconds. This page
+                   needs a slider. PuddleJumper runs <a href="/calculator.html">the same
+                   line</a> on the live offer and says cleared or not, out loud, before you
+                   tap. Houston, last 90 days, from offers logged in the car &mdash; not
+                   rides driven.</p>
             </div>
 
             <div class="tool-foot">
@@ -487,12 +517,23 @@
                 // (good typical offer, almost nothing over it) or spread with a few big
                 // winners (worse typical offer, more clears). 2026-10-08 is the case in
                 // point: the week's best median DSI, 84, and its second-worst clear rate.
-                var W = 720, H = 230, L = 42, R = 44, T = 14, B = 34;
+                var W = 720, H = 240, L = 64, R = 92, T = 16, B = 38;
                 var plotH = H - T - B;
                 var band = (W - L - R) / days.length;
                 var bw = Math.max(2, Math.min(30, band * 0.72));
                 var y = function (v) { return T + plotH - (v / 100) * plotH; };
                 var p = [];
+
+                // AXIS TITLES CARRY THE LIVE VALUES, so a drag visibly redraws the
+                // labels and not only the marks -- which is the job the spec wanted
+                // the slider placement to do, done without claiming a parameter is
+                // an axis.
+                p.push('<text transform="translate(16,' + (T + plotH / 2).toFixed(1) +
+                       ') rotate(-90)" fill="#00FF00" font-size="12" font-weight="600" ' +
+                       'text-anchor="middle">Cleared ' + money(keepV) + "/hr</text>");
+                p.push('<text transform="translate(' + (W - 14) + "," + (T + plotH / 2).toFixed(1) +
+                       ') rotate(90)" fill="#FFFFFF" font-size="12" font-weight="600" ' +
+                       'text-anchor="middle">DSI</text>');
 
                 [0, 25, 50, 75, 100].forEach(function (v) {
                     p.push('<line x1="' + L + '" y1="' + y(v).toFixed(1) + '" x2="' + (W - R) +
@@ -517,6 +558,9 @@
                     p.push('<line x1="' + L + '" y1="' + yd(100).toFixed(1) + '" x2="' + (W - R) +
                            '" y2="' + yd(100).toFixed(1) +
                            '" stroke="#FFFFFF" stroke-width="1" stroke-dasharray="5 4" opacity="0.45"/>');
+                    // 100 is the only number on that axis that means anything alone.
+                    p.push('<text x="' + L + '" y="' + (yd(100) - 6).toFixed(1) +
+                           '" fill="#FFFFFF" font-size="11" opacity="0.75">your line</text>');
                 }
 
                 days.forEach(function (d, i) {
@@ -550,6 +594,18 @@
                     });
                 }
 
+                // Label the series where it ends, so the reader never has to go to a
+                // legend to find out which mark is which.
+                if (dsiVals.length) {
+                    var li = -1;
+                    for (var q = days.length - 1; q >= 0; q--) { if (dsi[q] !== null) { li = q; break; } }
+                    if (li >= 0) {
+                        p.push('<text x="' + (L + li * band + band / 2 + 8).toFixed(1) + '" y="' +
+                               (yd(dsi[li]) + 4).toFixed(1) +
+                               '" fill="#FFFFFF" font-size="12" font-weight="600">DSI</text>');
+                    }
+                }
+
                 [0, days.length - 1].forEach(function (i, k, a) {
                     if (a.indexOf(i) !== k) { return; }
                     p.push('<text x="' + (L + i * band + band / 2).toFixed(1) + '" y="' + (H - 12) +
@@ -557,12 +613,12 @@
                            (i === 0 ? "start" : "end") + '">' + days[i].slice(5) + "</text>");
                 });
 
+                // No legend: the axis titles name both series, "DSI" labels the line
+                // where it ends and "your line" labels the 100 mark, and the paragraph
+                // below the chart explains the relationship properly. A legend here
+                // would be the third place saying the same thing.
                 chartEl.innerHTML = '<svg viewBox="0 0 ' + W + " " + H +
-                    '" preserveAspectRatio="xMidYMid meet">' + p.join("") + "</svg>" +
-                    '<p class="chart-foot"><span class="swatch-green"></span>share that cleared ' +
-                    '(left)<span class="swatch-line"></span>typical PuddleJumper score ' +
-                    '(right) &mdash; 100 is your line. A day can have a decent typical ' +
-                    'offer and still put almost nothing over the bar.</p>';
+                    '" preserveAspectRatio="xMidYMid meet">' + p.join("") + "</svg>";
                 daysNote.textContent = describeWindow(window) +
                     " Counted back from " + all[all.length - 1] + ".";
                 chartEl.setAttribute("aria-label",
