@@ -139,6 +139,24 @@
 
         #chart svg { display: block; width: 100%; height: auto; }
 
+        .chart-foot {
+            font-size: 13px;
+            color: #8E8E8E;
+            margin: 14px 0 0;
+            text-wrap: balance;
+        }
+
+        .swatch-green,
+        .swatch-line {
+            display: inline-block;
+            width: 11px;
+            margin-right: 5px;
+            vertical-align: baseline;
+        }
+
+        .swatch-green { height: 11px; border-radius: 2px; background: #00FF00; }
+        .swatch-line  { height: 0; border-top: 2px solid #FFFFFF; margin-left: 16px; }
+
         .chart-empty {
             color: #8E8E8E;
             font-size: 15px;
@@ -407,6 +425,9 @@
 
                 var days = GRID.days, offers = GRID.offers;
                 var cleared = days.map(function (_, d) { return GRID.cleared[d][ci][ki]; });
+                var dsi = days.map(function (_, d) {
+                    return GRID.dsi ? GRID.dsi[d][ci][ki] : null;
+                });
                 var rate = days.map(function (_, d) {
                     return offers[d] ? 100 * cleared[d] / offers[d] : 0;
                 });
@@ -425,7 +446,13 @@
 
                 // Fixed 0-100% scale: the question is what SHARE cleared, and a
                 // scale that rescaled itself would make a bad day look like a good one.
-                var W = 720, H = 230, L = 42, R = 10, T = 14, B = 34;
+                // TWO SCALES, DELIBERATELY. The bars are a share (0-100%) and the line
+                // is an index around 100, so they cannot share an axis -- and they are
+                // not the same fact told twice. A day can cluster just under the bar
+                // (good typical offer, almost nothing over it) or spread with a few big
+                // winners (worse typical offer, more clears). 2026-10-08 is the case in
+                // point: the week's best median DSI, 84, and its second-worst clear rate.
+                var W = 720, H = 230, L = 42, R = 44, T = 14, B = 34;
                 var plotH = H - T - B;
                 var band = (W - L - R) / days.length;
                 var bw = Math.max(4, Math.min(30, band * 0.68));
@@ -439,6 +466,24 @@
                            '" fill="#8E8E8E" font-size="12" text-anchor="end">' + v + '%</text>');
                 });
 
+                // Right-hand scale for the score. Fixed to 150 unless a day beats it,
+                // so the 100 line sits in the same place as the slider moves.
+                var dsiVals = dsi.filter(function (v) { return v !== null; });
+                var dsiMax  = Math.max(150, Math.ceil(Math.max.apply(null, dsiVals.concat([0])) / 50) * 50);
+                var yd = function (v) { return T + plotH - (v / dsiMax) * plotH; };
+
+                if (dsiVals.length) {
+                    [0, 100, dsiMax].forEach(function (v) {
+                        p.push('<text x="' + (W - R + 7) + '" y="' + (yd(v) + 4).toFixed(1) +
+                               '" fill="#8E8E8E" font-size="12" text-anchor="start">' + v + "</text>");
+                    });
+                    // 100 is the line. Mark it, because that is the only value on this
+                    // axis that means anything on its own.
+                    p.push('<line x1="' + L + '" y1="' + yd(100).toFixed(1) + '" x2="' + (W - R) +
+                           '" y2="' + yd(100).toFixed(1) +
+                           '" stroke="#FFFFFF" stroke-width="1" stroke-dasharray="5 4" opacity="0.45"/>');
+                }
+
                 days.forEach(function (d, i) {
                     var x = L + i * band + (band - bw) / 2;
                     var h = plotH - (y(rate[i]) - T);
@@ -450,8 +495,25 @@
                     p.push('<rect x="' + x.toFixed(1) + '" y="' + T + '" width="' + bw.toFixed(1) +
                            '" height="' + plotH + '" fill="transparent"><title>' + d + ": " +
                            cleared[i] + " of " + offers[i] + " offers cleared (" +
-                           Math.round(rate[i]) + '%)</title></rect>');
+                           Math.round(rate[i]) + "%)" +
+                           (dsi[i] === null ? "" : ", typical score " + dsi[i]) +
+                           '</title></rect>');
                 });
+
+                // the score line goes on top of the bars
+                if (dsiVals.length) {
+                    var path = days.map(function (_, i) {
+                        if (dsi[i] === null) { return null; }
+                        return (L + i * band + band / 2).toFixed(1) + " " + yd(dsi[i]).toFixed(1);
+                    }).filter(Boolean);
+                    p.push('<path d="M' + path.join(" L") + '" fill="none" stroke="#FFFFFF" ' +
+                           'stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>');
+                    days.forEach(function (_, i) {
+                        if (dsi[i] === null) { return; }
+                        p.push('<circle cx="' + (L + i * band + band / 2).toFixed(1) + '" cy="' +
+                               yd(dsi[i]).toFixed(1) + '" r="3" fill="#121212" stroke="#FFFFFF" stroke-width="2"/>');
+                    });
+                }
 
                 [0, days.length - 1].forEach(function (i, k, a) {
                     if (a.indexOf(i) !== k) { return; }
@@ -461,7 +523,11 @@
                 });
 
                 chartEl.innerHTML = '<svg viewBox="0 0 ' + W + " " + H +
-                    '" preserveAspectRatio="xMidYMid meet">' + p.join("") + "</svg>";
+                    '" preserveAspectRatio="xMidYMid meet">' + p.join("") + "</svg>" +
+                    '<p class="chart-foot"><span class="swatch-green"></span>share that cleared ' +
+                    '(left)<span class="swatch-line"></span>typical PuddleJumper score ' +
+                    '(right) &mdash; 100 is your line. A day can have a decent typical ' +
+                    'offer and still put almost nothing over the bar.</p>';
                 chartEl.setAttribute("aria-label",
                     "Share of offers clearing " + money(keepV) + " an hour at " +
                     perMile(costC).replace("&cent;", " cents") + " a mile, by day, " +
