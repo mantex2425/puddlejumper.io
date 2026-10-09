@@ -172,7 +172,11 @@
         }
 
         @media (min-width: 720px) {
-            .controls { grid-template-columns: 1fr 1fr; gap: 36px; }
+            .controls { grid-template-columns: 1fr 1fr; gap: 32px 36px; }
+        }
+
+        @media (min-width: 1040px) {
+            .controls { grid-template-columns: repeat(3, 1fr); }
         }
 
         .field-top {
@@ -344,6 +348,19 @@
                         <p class="field-note">What is left <em>after</em> the car is paid for &mdash;
                             not what Uber pays.</p>
                     </div>
+
+                    <div class="field">
+                        <div class="field-top">
+                            <label for="days">Days shown</label>
+                            <input type="number" id="days" min="7" max="90" step="1" value="90"
+                                   aria-label="How many days of offers to show">
+                        </div>
+                        <input type="range" id="days-range" min="7" max="90" step="1" value="90"
+                               aria-label="How many days of offers to show, slider">
+                        <p class="field-note" id="days-note">The window, counted back from the most
+                            recent day with offers.</p>
+                    </div>
+
                 </div>
             </div>
 
@@ -379,7 +396,7 @@
 
             // This page owns its own two controls and reads nothing from the
             // calculator. They are the only things that move the chart.
-            var FIELDS = ["cost", "keep"];
+            var FIELDS = ["cost", "keep", "days"];
             var el = {};
             FIELDS.forEach(function (id) {
                 el[id] = document.getElementById(id);
@@ -423,10 +440,27 @@
                 var ki = nearest(GRID.keep, read("keep"));
                 var costC = GRID.cost_cents[ci], keepV = GRID.keep[ki];
 
-                var days = GRID.days, offers = GRID.offers;
-                var cleared = days.map(function (_, d) { return GRID.cleared[d][ci][ki]; });
-                var dsi = days.map(function (_, d) {
-                    return GRID.dsi ? GRID.dsi[d][ci][ki] : null;
+                // THE WINDOW IS CALENDAR DAYS, not a count of bars. Offers are not
+                // logged every day -- 35 of the last 90 have five or more -- so "show
+                // me 30 days" has to mean the last 30 days of the calendar, however
+                // many of them we actually saw offers on. Counting bars instead would
+                // silently reach back months on a quiet stretch.
+                var all = GRID.days;
+                var last = new Date(all[all.length - 1] + "T00:00:00Z");
+                var window = read("days");
+                var cutoff = new Date(last.getTime() - (window - 1) * 86400000)
+                                 .toISOString().slice(0, 10);
+                var idx = [];
+                for (var n = 0; n < all.length; n++) {
+                    if (all[n] >= cutoff) { idx.push(n); }
+                }
+                if (!idx.length) { idx = [all.length - 1]; }
+
+                var days    = idx.map(function (n) { return all[n]; });
+                var offers  = idx.map(function (n) { return GRID.offers[n]; });
+                var cleared = idx.map(function (n) { return GRID.cleared[n][ci][ki]; });
+                var dsi     = idx.map(function (n) {
+                    return GRID.dsi ? GRID.dsi[n][ci][ki] : null;
                 });
                 var rate = days.map(function (_, d) {
                     return offers[d] ? 100 * cleared[d] / offers[d] : 0;
@@ -441,8 +475,9 @@
                 headline.innerHTML = totClr + " of " + totOff + " offers " +
                     '<span class="pct">(' + pct + "%)</span> cleared " + money(keepV) +
                     "/hr at " + perMile(costC) + " a mile";
-                headSub.textContent = days.length + " days, " + days[0] + " to " +
-                    days[days.length - 1] + ".";
+                headSub.textContent = days.length + (days.length === 1 ? " day" : " days") +
+                    " with offers, " + days[0] + " to " + days[days.length - 1] +
+                    " (" + window + "-day window).";
 
                 // Fixed 0-100% scale: the question is what SHARE cleared, and a
                 // scale that rescaled itself would make a bad day look like a good one.
@@ -455,7 +490,7 @@
                 var W = 720, H = 230, L = 42, R = 44, T = 14, B = 34;
                 var plotH = H - T - B;
                 var band = (W - L - R) / days.length;
-                var bw = Math.max(4, Math.min(30, band * 0.68));
+                var bw = Math.max(2, Math.min(30, band * 0.72));
                 var y = function (v) { return T + plotH - (v / 100) * plotH; };
                 var p = [];
 
@@ -528,11 +563,23 @@
                     '(left)<span class="swatch-line"></span>typical PuddleJumper score ' +
                     '(right) &mdash; 100 is your line. A day can have a decent typical ' +
                     'offer and still put almost nothing over the bar.</p>';
+                daysNote.textContent = describeWindow(window) +
+                    " Counted back from " + all[all.length - 1] + ".";
                 chartEl.setAttribute("aria-label",
                     "Share of offers clearing " + money(keepV) + " an hour at " +
                     perMile(costC).replace("&cent;", " cents") + " a mile, by day, " +
                     days[0] + " to " + days[days.length - 1] +
                     ". Overall " + pct + " percent.");
+            }
+
+            var daysNote = document.getElementById("days-note");
+
+            function describeWindow(n) {
+                if (n >= 85) { return "About three months."; }
+                if (n >= 55) { return "About two months."; }
+                if (n >= 26) { return "About a month."; }
+                if (n >= 12) { return "About a fortnight."; }
+                return "About a week.";
             }
 
             FIELDS.forEach(function (id) {
