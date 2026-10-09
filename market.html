@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How many Houston offers cleared this line - PuddleJumper</title>
+    <meta name="description" content="Set what your car costs and what you need to keep. See how many real Houston rideshare offers cleared that line, day by day.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #E0E0E0;
+            background: #121212;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header — same as the rest of the site */
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid #2D2D2D;
+            background: #1A1A1A;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00FF00;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-img {
+            height: 36px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #BDBDBD;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a[aria-current="page"] {
+            color: #00FF00;
+        }
+
+        /* Page intro */
+        .tool-head {
+            padding: 56px 0 28px;
+            text-align: center;
+        }
+
+        .tool-head h1 {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #FFFFFF;
+            margin-bottom: 14px;
+            text-wrap: balance;
+        }
+
+        .tool-head p {
+            font-size: 17px;
+            color: #8E8E8E;
+            max-width: 640px;
+            margin: 0 auto;
+            text-wrap: balance;
+        }
+
+        .panel {
+            background: #1A1A1A;
+            border: 1px solid #2D2D2D;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 28px;
+        }
+
+        .panel h2 {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #9E9E9E;
+            margin-bottom: 22px;
+        }
+
+        /* The live sentence -- the headline of this page */
+        .headline-line {
+            font-size: 26px;
+            font-weight: 700;
+            color: #FFFFFF;
+            text-align: center;
+            margin-bottom: 6px;
+            text-wrap: balance;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .headline-line .pct { color: #00FF00; }
+
+        .headline-sub {
+            font-size: 14px;
+            color: #8E8E8E;
+            text-align: center;
+            margin-bottom: 26px;
+            text-wrap: balance;
+        }
+
+        #chart svg { display: block; width: 100%; height: auto; }
+
+        .chart-empty {
+            color: #8E8E8E;
+            font-size: 15px;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        /* Controls */
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 26px;
+        }
+
+        @media (min-width: 720px) {
+            .controls { grid-template-columns: 1fr 1fr; gap: 36px; }
+        }
+
+        .field-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .field label { font-size: 15px; font-weight: 500; color: #E0E0E0; }
+
+        .field input[type="number"] {
+            width: 92px;
+            background: #121212;
+            border: 1px solid #3D3D3D;
+            border-radius: 6px;
+            color: #FFFFFF;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 7px 10px;
+            text-align: right;
+        }
+
+        .field input[type="number"]:focus-visible,
+        .field input[type="range"]:focus-visible,
+        .cta-button:focus-visible {
+            outline: 2px solid #00FF00;
+            outline-offset: 2px;
+        }
+
+        .field input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #2D2D2D;
+            cursor: pointer;
+        }
+
+        .field input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px; height: 20px; border-radius: 50%;
+            background: #00FF00; border: none; cursor: pointer;
+        }
+
+        .field input[type="range"]::-moz-range-thumb {
+            width: 20px; height: 20px; border-radius: 50%;
+            background: #00FF00; border: none; cursor: pointer;
+        }
+
+        .field-note { font-size: 13px; color: #8E8E8E; margin-top: 8px; }
+
+        .tool-foot {
+            margin-bottom: 64px;
+            padding: 24px;
+            background: #1A1A1A;
+            border: 1px solid #2D2D2D;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .tool-foot p { color: #BDBDBD; margin-bottom: 18px; text-wrap: balance; }
+        .tool-foot a.inline { color: #00FF00; text-decoration: none; font-weight: 600; }
+        .tool-foot a.inline:hover { text-decoration: underline; }
+
+        .tool-foot-note { font-size: 13px; color: #8E8E8E; margin-top: 14px; margin-bottom: 0; }
+
+        .cta-button {
+            display: inline-block;
+            background: #00FF00;
+            color: #000000;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 17px;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #4CAF50; color: #FFFFFF;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        footer { background: #1A1A1A; border-top: 1px solid #2D2D2D; padding: 40px 0; }
+        .footer-content { text-align: center; }
+        .footer-links {
+            display: flex; justify-content: center; flex-wrap: wrap;
+            gap: 24px; list-style: none; margin-bottom: 20px;
+        }
+        .footer-links a { color: #BDBDBD; text-decoration: none; font-size: 15px; }
+        .footer-links a:hover { color: #00FF00; }
+        .copyright { color: #757575; font-size: 14px; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .tool-head { padding: 36px 0 22px; }
+            .tool-head h1 { font-size: 29px; }
+            .headline-line { font-size: 21px; }
+            .panel { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="logo"><img src="/Puddles_Transparent_bg.png" alt="PuddleJumper mascot" class="logo-img"> PuddleJumper</a>
+                <ul class="nav-links">
+                    <li><a href="/#features">Features</a></li>
+                    <li><a href="/#how-it-works">How It Works</a></li>
+                    <li><a href="/calculator.html">Calculator</a></li>
+<li><a href="/market.html" aria-current="page">Houston offers</a></li>
+                    <li><a href="/#pricing">Pricing</a></li>
+                    <li><a href="/help.html">Help</a></li>
+                    <li><a href="https://blog.puddlejumper.io" target="_blank">Newsletter</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="tool-head">
+                <h1>How many Houston offers cleared this line</h1>
+                <p>Not rides driven. A day is included only if at least 5 offers were logged.</p>
+            </div>
+
+            <div class="panel">
+                <p class="headline-line" id="headline" role="status" aria-live="polite">&mdash;</p>
+                <p class="headline-sub" id="headline-sub">Set the two numbers below.</p>
+                <div id="chart" role="img" aria-label="Share of offers that cleared the line, by day">
+                    <p class="chart-empty">No offer data yet</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>Your numbers</h2>
+                <div class="controls">
+                    <div class="field">
+                        <div class="field-top">
+                            <label for="cost">What the car costs, per mile</label>
+                            <input type="number" id="cost" min="0.30" max="1.50" step="0.01" value="0.35"
+                                   aria-label="Vehicle cost per mile, in dollars">
+                        </div>
+                        <input type="range" id="cost-range" min="0.30" max="1.50" step="0.01" value="0.35"
+                               aria-label="Vehicle cost per mile, slider">
+                        <p class="field-note">35&cent; is gas and wear. The IRS rate of 72&cent; also
+                            covers insurance and registration, which you pay whether or not you take
+                            the ride.</p>
+                    </div>
+
+                    <div class="field">
+                        <div class="field-top">
+                            <label for="keep">What you need to keep, per hour</label>
+                            <input type="number" id="keep" min="8" max="30" step="1" value="16"
+                                   aria-label="Dollars to keep per hour, after the car">
+                        </div>
+                        <input type="range" id="keep-range" min="8" max="30" step="1" value="16"
+                               aria-label="Dollars to keep per hour, slider">
+                        <p class="field-note">What is left <em>after</em> the car is paid for &mdash;
+                            not what Uber pays.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tool-foot">
+                <p><a class="inline" href="/calculator.html">PuddleJumper</a> runs this check on the
+                   live offer, including your zones, before the 10 seconds are gone.</p>
+                <a class="cta-button" href="mailto:support@puddlejumper.io?subject=PuddleJumper%20beta%20access&body=I%27d%20like%20to%20join%20the%20PuddleJumper%20Android%20test.%0A%0AThe%20Google%20account%20email%20on%20my%20phone%20is%3A%0A%0A%0A%28It%20has%20to%20be%20the%20Google%20account%20you%20use%20on%20the%20Play%20Store%20--%20an%20invite%0Asent%20to%20any%20other%20address%20will%20not%20reach%20you.%29%0A%0ACity%20I%20drive%20in%3A%0A">Request beta access</a>
+                <p class="tool-foot-note">Closed testing on Google Play &mdash; send the Google account
+                   email on your phone and we&rsquo;ll add you.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="/calculator.html">Calculator</a></li>
+                    <li><a href="/privacy.html">Privacy Policy</a></li>
+                    <li><a href="/terms.html">Terms of Service</a></li>
+                    <li><a href="/help.html">Help &amp; Support</a></li>
+                    <li><a href="mailto:support@puddlejumper.io">Contact</a></li>
+                    <li><a href="/delete-account.html">Delete Account</a></li>
+                </ul>
+                <p class="copyright">&copy; 2026 PuddleJumper. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            "use strict";
+
+            // This page owns its own two controls and reads nothing from the
+            // calculator. They are the only things that move the chart.
+            var FIELDS = ["cost", "keep"];
+            var el = {};
+            FIELDS.forEach(function (id) {
+                el[id] = document.getElementById(id);
+                el[id + "-range"] = document.getElementById(id + "-range");
+            });
+            var chartEl  = document.getElementById("chart");
+            var headline = document.getElementById("headline");
+            var headSub  = document.getElementById("headline-sub");
+            var GRID = null;
+
+            function clamp(n, lo, hi) { return Math.min(hi, Math.max(lo, n)); }
+
+            function read(id) {
+                var n = parseFloat(el[id].value);
+                if (!isFinite(n)) { n = parseFloat(el[id + "-range"].value); }
+                return clamp(n, parseFloat(el[id].min), parseFloat(el[id].max));
+            }
+
+            function money(n) { return "$" + (n % 1 ? n.toFixed(2) : String(n)); }
+
+            // 35c reads as cents; 150c reads as $1.50. Nobody says "a hundred and
+            // fifty cents a mile".
+            function perMile(cents) {
+                return cents >= 100 ? "$" + (cents / 100).toFixed(2) : cents + "&cent;";
+            }
+
+            // Snap to the nearest precomputed cell. Never interpolate: a part-way
+            // count of offers is not a thing that happened.
+            function nearest(axis, v) {
+                var best = 0, bestD = Infinity;
+                for (var i = 0; i < axis.length; i++) {
+                    var d = Math.abs(axis[i] - v);
+                    if (d < bestD) { bestD = d; best = i; }
+                }
+                return best;
+            }
+
+            function draw() {
+                if (!GRID || !GRID.days.length) { return; }
+                var ci = nearest(GRID.cost_cents, Math.round(read("cost") * 100));
+                var ki = nearest(GRID.keep, read("keep"));
+                var costC = GRID.cost_cents[ci], keepV = GRID.keep[ki];
+
+                var days = GRID.days, offers = GRID.offers;
+                var cleared = days.map(function (_, d) { return GRID.cleared[d][ci][ki]; });
+                var rate = days.map(function (_, d) {
+                    return offers[d] ? 100 * cleared[d] / offers[d] : 0;
+                });
+
+                var totOff = offers.reduce(function (a, b) { return a + b; }, 0);
+                var totClr = cleared.reduce(function (a, b) { return a + b; }, 0);
+                var pct = totOff ? Math.round(100 * totClr / totOff) : 0;
+
+                // The sentence is built from the SLIDERS, every time -- never a
+                // caption stored with the data.
+                headline.innerHTML = totClr + " of " + totOff + " offers " +
+                    '<span class="pct">(' + pct + "%)</span> cleared " + money(keepV) +
+                    "/hr at " + perMile(costC) + " a mile";
+                headSub.textContent = days.length + " days, " + days[0] + " to " +
+                    days[days.length - 1] + ".";
+
+                // Fixed 0-100% scale: the question is what SHARE cleared, and a
+                // scale that rescaled itself would make a bad day look like a good one.
+                var W = 720, H = 230, L = 42, R = 10, T = 14, B = 34;
+                var plotH = H - T - B;
+                var band = (W - L - R) / days.length;
+                var bw = Math.max(4, Math.min(30, band * 0.68));
+                var y = function (v) { return T + plotH - (v / 100) * plotH; };
+                var p = [];
+
+                [0, 25, 50, 75, 100].forEach(function (v) {
+                    p.push('<line x1="' + L + '" y1="' + y(v).toFixed(1) + '" x2="' + (W - R) +
+                           '" y2="' + y(v).toFixed(1) + '" stroke="#2D2D2D" stroke-width="1"/>');
+                    p.push('<text x="' + (L - 7) + '" y="' + (y(v) + 4).toFixed(1) +
+                           '" fill="#8E8E8E" font-size="12" text-anchor="end">' + v + '%</text>');
+                });
+
+                days.forEach(function (d, i) {
+                    var x = L + i * band + (band - bw) / 2;
+                    var h = plotH - (y(rate[i]) - T);
+                    if (h > 0.5) {
+                        p.push('<rect x="' + x.toFixed(1) + '" y="' + y(rate[i]).toFixed(1) +
+                               '" width="' + bw.toFixed(1) + '" height="' + h.toFixed(1) +
+                               '" fill="#00FF00"/>');
+                    }
+                    p.push('<rect x="' + x.toFixed(1) + '" y="' + T + '" width="' + bw.toFixed(1) +
+                           '" height="' + plotH + '" fill="transparent"><title>' + d + ": " +
+                           cleared[i] + " of " + offers[i] + " offers cleared (" +
+                           Math.round(rate[i]) + '%)</title></rect>');
+                });
+
+                [0, days.length - 1].forEach(function (i, k, a) {
+                    if (a.indexOf(i) !== k) { return; }
+                    p.push('<text x="' + (L + i * band + band / 2).toFixed(1) + '" y="' + (H - 12) +
+                           '" fill="#8E8E8E" font-size="12" text-anchor="' +
+                           (i === 0 ? "start" : "end") + '">' + days[i].slice(5) + "</text>");
+                });
+
+                chartEl.innerHTML = '<svg viewBox="0 0 ' + W + " " + H +
+                    '" preserveAspectRatio="xMidYMid meet">' + p.join("") + "</svg>";
+                chartEl.setAttribute("aria-label",
+                    "Share of offers clearing " + money(keepV) + " an hour at " +
+                    perMile(costC).replace("&cent;", " cents") + " a mile, by day, " +
+                    days[0] + " to " + days[days.length - 1] +
+                    ". Overall " + pct + " percent.");
+            }
+
+            FIELDS.forEach(function (id) {
+                var num = el[id], rng = el[id + "-range"];
+                num.addEventListener("input", function () {
+                    var n = parseFloat(num.value);
+                    if (isFinite(n)) { rng.value = clamp(n, parseFloat(num.min), parseFloat(num.max)); }
+                    draw();
+                });
+                num.addEventListener("blur", function () {
+                    num.value = read(id); rng.value = num.value; draw();
+                });
+                rng.addEventListener("input", function () { num.value = rng.value; draw(); });
+            });
+
+            fetch("/data/keep_grid.json", { cache: "no-store" })
+                .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("http " + r.status)); })
+                .then(function (j) {
+                    if (!j || !j.days || !j.days.length) { return; }
+                    GRID = j;
+                    draw();
+                })
+                .catch(function () {
+                    headSub.textContent = "Offer data is not available right now.";
+                });
+        })();
+    </script>
+</body>
+</html>

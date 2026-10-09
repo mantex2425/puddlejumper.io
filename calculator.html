@@ -402,49 +402,21 @@
             color: #00FF00;
         }
 
-        /* Daily chart */
-        .chart-panel {
-            margin-bottom: 64px;
-        }
-
-        .chart-sub {
-            font-size: 14px;
-            color: #8E8E8E;
-            margin: -14px 0 18px;
-        }
-
-        .chart-empty {
-            color: #8E8E8E;
-            font-size: 15px;
-            padding: 28px 0;
+        .market-link {
+            margin: -40px 0 56px;
             text-align: center;
         }
 
-        #chart svg {
-            display: block;
-            width: 100%;
-            height: auto;
+        .market-link a {
+            color: #00FF00;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 17px;
         }
 
-        .chart-foot {
-            font-size: 13px;
-            color: #8E8E8E;
-            margin-top: 12px;
-            text-wrap: balance;
+        .market-link a:hover {
+            text-decoration: underline;
         }
-
-        .swatch-grey,
-        .swatch-green {
-            display: inline-block;
-            width: 11px;
-            height: 11px;
-            border-radius: 2px;
-            margin-right: 5px;
-            vertical-align: baseline;
-        }
-
-        .swatch-grey  { background: #3A3A3A; }
-        .swatch-green { background: #00FF00; }
 
         /* Tool footer / CTA */
         .tool-foot {
@@ -574,6 +546,7 @@
                     <li><a href="/#features">Features</a></li>
                     <li><a href="/#how-it-works">How It Works</a></li>
                     <li><a href="/calculator.html" aria-current="page">Calculator</a></li>
+<li><a href="/market.html">Houston offers</a></li>
                     <li><a href="/#pricing">Pricing</a></li>
                     <li><a href="/help.html">Help</a></li>
                     <li><a href="https://blog.puddlejumper.io" target="_blank">Newsletter</a></li>
@@ -648,12 +621,12 @@
                         <div class="field">
                             <div class="field-top">
                                 <label for="cost">What the car costs, per mile</label>
-                                <input type="number" id="cost" min="0" max="0.90" step="0.01" value="0.35"
+                                <input type="number" id="cost" min="0.30" max="1.50" step="0.01" value="0.35"
                                        aria-label="Vehicle cost per mile, in dollars">
                             </div>
-                            <input type="range" id="cost-range" min="0" max="0.90" step="0.01" value="0.35"
+                            <input type="range" id="cost-range" min="0.30" max="1.50" step="0.01" value="0.35"
                                    aria-label="Vehicle cost per mile, slider">
-                            <p class="field-note">35&cent; is a starting point, not your exact cost &mdash; fuel, tyres, maintenance and depreciation. Slide it to <strong>zero</strong> to see the offer the way the card shows it, with the car pretended free. The IRS rate of 72&cent; is higher still because it also covers insurance and registration, which you pay whether or not you take the ride. This is not tax advice.</p>
+                            <p class="field-note"><strong>35&cent; is gas and wear &mdash; a starting point, not your exact cost.</strong> Add depreciation and it climbs; the IRS rate of 72&cent; is higher still because it also covers insurance and registration, which you pay whether or not you take this ride. Slide it to whatever your car really costs. This is not tax advice.</p>
                         </div>
 
                         <div class="field">
@@ -664,7 +637,7 @@
                             </div>
                             <input type="range" id="line-range" min="8" max="30" step="1" value="16"
                                    aria-label="Your line, dollars per hour, slider">
-                            <p class="field-note">What you want left <em>after</em> the car is paid for &mdash; not what Uber pays. Everything on this page is measured against it, including the chart below.</p>
+                            <p class="field-note">What you want left <em>after</em> the car is paid for &mdash; not what Uber pays. The verdict above is measured against it.</p>
                         </div>
 
                         <div class="field">
@@ -729,13 +702,9 @@
                 </div>
             </div>
 
-            <div class="panel chart-panel">
-                <h2>Offers that cleared your line</h2>
-                <p class="chart-sub" id="chart-sub">Same cost and keep as the sliders above. Offers logged in Houston &mdash; not rides driven.</p>
-                <div id="chart" role="img" aria-label="Offers per day and how many cleared your line">
-                    <p class="chart-empty">No ride data yet</p>
-                </div>
-            </div>
+            <p class="market-link">
+                <a href="/market.html">See how often Houston offers clear a line like this &rarr;</a>
+            </p>
         </div>
     </main>
 
@@ -743,6 +712,7 @@
         <div class="container">
             <div class="footer-content">
                 <ul class="footer-links">
+                    <li><a href="/market.html">Houston offers</a></li>
                     <li><a href="/privacy.html">Privacy Policy</a></li>
                     <li><a href="/terms.html">Terms of Service</a></li>
                     <li><a href="/help.html">Help &amp; Support</a></li>
@@ -975,142 +945,6 @@
 
             calculate();
 
-            // ================================================================
-            // OFFERS THAT CLEARED YOUR LINE
-            //
-            // The chart answers the sliders. For whatever the driver sets the car
-            // to cost and whatever they need to keep, it shows how many of that
-            // day's real offers would have cleared.
-            //
-            // The browser never recomputes history and never sees an offer. A
-            // nightly job precomputes every (day x cost x keep) cell into
-            // public.keep_grid_daily and ships it packed: axes declared once, then
-            // cleared[day][cost][keep]. 15 days x 46 costs x 23 keeps is 41 KB
-            // this way and would be about 2.8 MB as objects.
-            //
-            // Sliders move in finer steps than the grid, so we snap to the nearest
-            // cell rather than interpolating -- an interpolated count of offers is
-            // not a thing that happened.
-            // ================================================================
-            var chartEl  = document.getElementById("chart");
-            var chartSub = document.getElementById("chart-sub");
-            var GRID = null;
-
-            function nearestIndex(axis, value) {
-                var best = 0, bestD = Infinity;
-                for (var i = 0; i < axis.length; i++) {
-                    var d = Math.abs(axis[i] - value);
-                    if (d < bestD) { bestD = d; best = i; }
-                }
-                return best;
-            }
-
-            function drawChart() {
-                if (!GRID || !GRID.days.length) { return; }
-                var ci = nearestIndex(GRID.cost_cents, Math.round(read("cost") * 100));
-                var ki = nearestIndex(GRID.keep, read("line"));
-                var costShown = GRID.cost_cents[ci] / 100;
-                var keepShown = GRID.keep[ki];
-
-                var days = GRID.days;
-                var offers  = GRID.offers;
-                var cleared = days.map(function (_, d) { return GRID.cleared[d][ci][ki]; });
-                // ONE BIG SATURDAY MUST NOT FLATTEN THE FORTNIGHT. 3 October logged
-                // 201 offers against a 30-ish median, so a plain max scale left
-                // fourteen of fifteen days as slivers. When the top day is more than
-                // twice the next one it is an outlier, not the scale: the axis caps
-                // just above the runner-up and the clipped bar is labelled with its
-                // real number, which hides nothing and makes the rest readable.
-                var sorted  = offers.slice().sort(function (a, b) { return b - a; });
-                var outlier = sorted.length > 1 && sorted[0] > sorted[1] * 2;
-                var maxOff  = outlier ? Math.ceil(sorted[1] * 1.15) : sorted[0];
-
-                var W = 720, H = 250, L = 38, R = 10, T = 14, B = 34;
-                var plotH = H - T - B;
-                var band  = (W - L - R) / days.length;
-                var bw    = Math.max(3, Math.min(26, band * 0.66));
-
-                var y = function (v) { return T + plotH - (v / maxOff) * plotH; };
-                var p = [];
-
-                // gridlines labelled with counts the chart actually reaches
-                [0, 0.5, 1].forEach(function (f) {
-                    var v = Math.round(maxOff * f);
-                    if (f === 1 && outlier) { v = maxOff; }
-                    p.push('<line x1="' + L + '" y1="' + y(v).toFixed(1) + '" x2="' + (W - R) +
-                           '" y2="' + y(v).toFixed(1) + '" stroke="#2D2D2D" stroke-width="1"/>');
-                    p.push('<text x="' + (L - 7) + '" y="' + (y(v) + 4).toFixed(1) +
-                           '" fill="#8E8E8E" font-size="12" text-anchor="end">' + v + '</text>');
-                });
-
-                var yc = function (v) { return y(Math.min(v, maxOff)); };
-                days.forEach(function (d, i) {
-                    var x = L + i * band + (band - bw) / 2;
-                    p.push('<rect x="' + x.toFixed(1) + '" y="' + yc(offers[i]).toFixed(1) +
-                           '" width="' + bw.toFixed(1) + '" height="' + (plotH - (yc(offers[i]) - T)).toFixed(1) +
-                           '" fill="#3A3A3A"/>');
-                    if (cleared[i] > 0) {
-                        p.push('<rect x="' + x.toFixed(1) + '" y="' + yc(cleared[i]).toFixed(1) +
-                               '" width="' + bw.toFixed(1) + '" height="' + (plotH - (yc(cleared[i]) - T)).toFixed(1) +
-                               '" fill="#00FF00"/>');
-                    }
-                    if (offers[i] > maxOff) {
-                        p.push('<text x="' + (x + bw / 2).toFixed(1) + '" y="' + (T - 3) +
-                               '" fill="#BDBDBD" font-size="11" text-anchor="middle">' +
-                               offers[i] + '</text>');
-                    }
-                    var med = GRID.median[i][ci];
-                    p.push('<rect x="' + x.toFixed(1) + '" y="' + T + '" width="' + bw.toFixed(1) +
-                           '" height="' + plotH + '" fill="transparent"><title>' + d + ": " +
-                           cleared[i] + " of " + offers[i] + " cleared" +
-                           (med === null ? "" : ", median " + money(med) + "/hr") +
-                           '</title></rect>');
-                });
-
-                [0, days.length - 1].forEach(function (i, k, a) {
-                    if (a.indexOf(i) !== k) { return; }
-                    p.push('<text x="' + (L + i * band + band / 2).toFixed(1) + '" y="' + (H - 12) +
-                           '" fill="#8E8E8E" font-size="12" text-anchor="' +
-                           (i === 0 ? "start" : "end") + '">' + days[i].slice(5) + '</text>');
-                });
-
-                var totOff = offers.reduce(function (a, b) { return a + b; }, 0);
-                var totClr = cleared.reduce(function (a, b) { return a + b; }, 0);
-                var pct = totOff ? Math.round(100 * totClr / totOff) : 0;
-
-                // The sentence first, then the key. Running them together read as
-                // prose ("every offer cleared $16/hr...") and said the opposite.
-                chartEl.innerHTML = '<svg viewBox="0 0 ' + W + " " + H +
-                    '" preserveAspectRatio="xMidYMid meet">' + p.join("") + "</svg>" +
-                    '<p class="chart-foot"><strong>' + totClr + " of " + totOff +
-                    " offers (" + pct + '%)</strong> cleared ' + money(keepShown) + '/hr at ' +
-                    Math.round(costShown * 100) + '&cent; a mile.<br>' +
-                    '<span class="swatch-grey"></span>every offer' +
-                    '<span class="swatch-green" style="margin-left:14px"></span>cleared yours' +
-                    '. Days with fewer than five offers are left out.</p>';
-                chartEl.setAttribute("aria-label",
-                    "Offers per day from " + days[0] + " to " + days[days.length - 1] +
-                    ". At " + Math.round(costShown * 100) + " cents a mile, keeping " +
-                    money(keepShown) + " an hour, " + totClr + " of " + totOff +
-                    " offers cleared, " + pct + " percent.");
-            }
-
-            fetch("/data/keep_grid.json", { cache: "no-store" })
-                .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("http " + r.status)); })
-                .then(function (j) {
-                    if (!j || !j.days || !j.days.length) { return; }   // leave "No ride data yet"
-                    GRID = j;
-                    chartSub.textContent = "Same cost and keep as the sliders above. " +
-                        j.offers.reduce(function (a, b) { return a + b; }, 0) +
-                        " offers logged in Houston over " + j.days.length +
-                        " days \u2014 not rides driven.";
-                    drawChart();
-                })
-                .catch(function () { /* the calculator above does not depend on this */ });
-
-            ["line", "line-range", "cost", "cost-range"].forEach(function (id) {
-                document.getElementById(id).addEventListener("input", drawChart);
-            });
         })();
     </script>
 </body>
