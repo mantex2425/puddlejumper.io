@@ -1,0 +1,8 @@
+# PuddleJumper -- everything here is meant to be read, by people and by machines.
+User-agent: *
+Allow: /
+
+# The daily offer data the market page charts. Crawl it; it is why the page exists.
+Allow: /data/
+
+Sitemap: https://puddlejumper.io/sitemap.xml

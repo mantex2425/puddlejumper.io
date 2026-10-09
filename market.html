@@ -3,8 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How many Houston offers cleared this line - PuddleJumper</title>
-    <meta name="description" content="Set what your car costs and what you need to keep. See how many real Houston rideshare offers cleared that line, day by day.">
+    <title>Uber driver pay in Houston: what offers clear after the car</title>
+    <meta name="description" content="See what share of real Houston Uber offers still pay after gas and wear. Set your hourly line and your cost per mile. Logged offers, not rides driven.">
+    <link rel="canonical" href="https://puddlejumper.io/market.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="PuddleJumper">
+    <meta property="og:url" content="https://puddlejumper.io/market.html">
+    <meta property="og:title" content="Uber driver pay in Houston: what offers clear after the car">
+    <meta property="og:description" content="See what share of real Houston Uber offers still pay after gas and wear. Set your hourly line and your cost per mile. Logged offers, not rides driven.">
+    <meta property="og:image" content="https://puddlejumper.io/Puddles_Transparent_bg.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Uber driver pay in Houston: what offers clear after the car">
+    <meta name="twitter:description" content="See what share of real Houston Uber offers still pay after gas and wear. Set your hourly line and your cost per mile. Logged offers, not rides driven.">
+    <meta name="twitter:image" content="https://puddlejumper.io/Puddles_Transparent_bg.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -156,6 +167,17 @@
             border-top: 1px solid #2D2D2D;
         }
 
+        .explain h2 {
+            font-size: 19px;
+            font-weight: 700;
+            color: #FFFFFF;
+            text-transform: none;
+            letter-spacing: 0;
+            margin: 26px 0 10px;
+        }
+
+        .explain h2:first-child { margin-top: 0; }
+
         .explain p {
             color: #BDBDBD;
             font-size: 15px;
@@ -303,6 +325,84 @@
             .panel { padding: 20px; }
         }
     </style>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "Houston Uber offer economics, daily",
+  "description": "Rideshare offers logged in Houston, Texas. For each day, how many offers were seen and how many still cleared a chosen hourly rate once a chosen vehicle cost per mile is subtracted. Offers shown to a driver, not completed trips. Days with fewer than 5 offers are excluded. Across 2026-08-08 to 2026-10-08, 130 of 1112 offers (12%) cleared $16 an hour after a 35 cent per mile vehicle cost.",
+  "url": "https://puddlejumper.io/market.html",
+  "license": "https://puddlejumper.io/terms.html",
+  "creator": {
+    "@type": "Organization",
+    "name": "PuddleJumper",
+    "url": "https://puddlejumper.io"
+  },
+  "spatialCoverage": {
+    "@type": "Place",
+    "name": "Houston, Texas, United States"
+  },
+  "temporalCoverage": "2026-08-08/2026-10-08",
+  "variableMeasured": [
+    {
+      "@type": "PropertyValue",
+      "name": "offers",
+      "description": "Offers shown to a driver that day"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "cleared",
+      "description": "Offers whose pay, after vehicle cost, reached the chosen hourly rate"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "median DSI",
+      "description": "Middle offer scored against the chosen line; 100 means it cleared"
+    }
+  ],
+  "distribution": [
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "application/json",
+      "contentUrl": "https://puddlejumper.io/data/keep_grid.json"
+    }
+  ],
+  "isAccessibleForFree": true,
+  "dateModified": "2026-10-09"
+}
+    </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What do Uber drivers actually keep per hour?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Take the fare, subtract the miles at what the car really costs, and divide by the whole job including the drive to the pickup. In 1112 offers logged in Houston between 2026-08-08 and 2026-10-08, 12% cleared $16 an hour once 35 cents a mile was subtracted."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is the Uber fare not the hourly rate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A fare says nothing about how long the job takes or how far you drive to reach it. Two offers paying the same can be twenty minutes apart in work and several dollars apart in vehicle cost, and the car is paid out of the same fare whether or not the card mentions it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does DSI mean on an Uber offer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "DSI scores an offer against the hourly rate you need to keep after the car. 100 means the offer cleared that line. A day can show a median DSI near 100 and still clear almost no offers, because the median describes the middle offer rather than the count above the line."
+      }
+    }
+  ]
+}
+    </script>
 </head>
 <body>
     <header>
@@ -325,13 +425,20 @@
     <main>
         <div class="container">
             <div class="tool-head">
-                <h1>How many Houston offers cleared this line</h1>
-                <p>Not rides driven. A day is included only if at least 5 offers were logged.</p>
+                <h1>Uber driver pay in Houston, after the car</h1>
+                <p>Uber shows the fare. It does not show what is left after the miles. This chart
+                   uses offers logged in Houston, sets a cost per mile and an hourly line, and
+                   counts how many still cleared. Not rides driven. A day is included only if at
+                   least 5 offers were logged.</p>
             </div>
 
             <div class="panel">
-                <p class="headline-line" id="headline" role="status" aria-live="polite">&mdash;</p>
-                <p class="headline-sub" id="headline-sub">Set the two numbers below.</p>
+                <!-- BAKED:headline -->
+                <p class="headline-line" id="headline" role="status" aria-live="polite">130 of 1112 offers <span class="pct">(12%)</span> cleared $16/hr at 35&cent; a mile</p>
+                <!-- /BAKED:headline -->
+                <!-- BAKED:sub -->
+                <p class="headline-sub" id="headline-sub">35 days with offers, 2026-08-08 to 2026-10-08 (90-day window).</p>
+                <!-- /BAKED:sub -->
                 <div class="axis-control axis-left">
                 <div class="field">
                     <div class="field-top">
@@ -382,11 +489,26 @@
             </div>
 
             <div class="panel explain">
-                <p>DSI scores the middle offer against your line. 100 means that offer
-                   cleared. The green bars are the share of offers that reached 100. A day
-                   can show a DSI near 100 and still clear almost none, because the line is
-                   the middle offer, not the count. Uber shows the fare. It does not show
-                   how few offers clear after the car is paid.</p>
+                <h2>What Uber drivers actually keep per hour</h2>
+                <p>Take the fare, subtract the miles at whatever your car really costs, and
+                   divide by the time the whole job took &mdash; the drive to the pickup as
+                   well as the trip. That is what you keep per hour. Set the two sliders above
+                   to your own numbers and the chart recounts every logged Houston offer
+                   against them.</p>
+
+                <h2>Why the fare is not the hourly rate</h2>
+                <p>A fare says nothing about how long it takes or how far you drive to earn it.
+                   Two offers paying the same can be twenty minutes apart in work and several
+                   dollars apart in cost. The car is paid out of the same fare, whether or not
+                   the card mentions it, which is why an offer that looks fine can leave very
+                   little behind.</p>
+
+                <h2>What DSI means on an offer</h2>
+                <p>DSI scores the middle offer against your line. 100 means it cleared. The
+                   green bars are the share of offers that reached 100. A day can sit near 100
+                   and still clear almost none, because the line is the middle offer, not the
+                   count.</p>
+
                 <p class="why">On a shift you get one offer and about ten seconds. This page
                    needs a slider. PuddleJumper runs <a href="/calculator.html">the same
                    line</a> on the live offer and says cleared or not, out loud, before you

@@ -1,0 +1,53 @@
+# PuddleJumper
+
+> An Android app that scores each Uber offer against the hourly rate a driver
+> needs to keep AFTER vehicle costs, and says out loud whether it cleared,
+> before the ten-second offer times out. Published by a working Houston driver.
+
+## What the data is
+
+Offers SHOWN to a driver in Houston, Texas, read off the offer card and logged
+with their fare, distance and time. These are offers, not completed trips: no
+claim is made about rides driven. A day is published only if at least five
+offers were logged that day.
+
+- Window: 2026-08-08 to 2026-10-08
+- Offers: 1,112
+- Days: 35
+- Source: one working driver's own offer stream. Not a market-wide survey.
+
+## Headline finding (2026-10-09)
+
+Of 1,112 Houston offers logged between 2026-08-08 and 2026-10-08,
+**130 (12%) still paid $16 an hour or better** once the car was charged
+at 35 cents a mile over every mile driven, including the drive to the pickup.
+
+At the same $16 line: about 78% of offers clear if the car is treated as free,
+about 28% at 21 cents a mile, about 12% at 35 cents.
+
+## How "what you keep" is calculated
+
+    keep_per_hour = (fare - total_miles * cost_per_mile) / total_hours
+
+total_miles and total_hours include the drive to the pickup as well as the trip.
+An offer "clears" when keep_per_hour reaches the driver's chosen hourly line.
+
+## DSI
+
+DSI scores an offer against that line: 100 means it cleared. A day's median DSI
+can sit near 100 while almost no offers clear, because the median describes the
+middle offer, not how many got over the line.
+
+## Honest limits
+
+- One driver, one city. Do not generalise to "Houston drivers earn X".
+- Offers shown, not rides driven. Pickup detection was removed in August 2026.
+- Houston fares fell about 31% between March and October 2026; older figures
+  published by this site do not describe the current market.
+
+## Pages
+
+- Market data and chart: https://puddlejumper.io/market.html
+- Single-offer calculator: https://puddlejumper.io/calculator.html
+- Raw daily grid (JSON): https://puddlejumper.io/data/keep_grid.json
+- Newsletter: https://blog.puddlejumper.io
